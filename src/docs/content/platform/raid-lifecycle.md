@@ -1,21 +1,23 @@
 # Raid Lifecycle
 
-Mercenary runs one state machine from request intake through settlement.
+Mercenary runs one state machine from request intake to settlement.
 
-## High-Level Loop
+## Flow
 
-1. accept raid request
-2. sanitize task payload
-3. build a provider discovery query
-4. discover fresh providers and probe readiness
-5. select primary providers and one reserve
-6. invite providers
-7. wait for accept and first heartbeat
-8. collect heartbeats, failures, and submissions
-9. evaluate submissions
-10. approve valid outputs
-11. split payout equally across successful providers
-12. write settlement execution artifacts
+```mermaid
+flowchart TD
+  A["Accept request"] --> B["Sanitize task"]
+  B --> C["Discover fresh providers"]
+  C --> D["Probe /health"]
+  D --> E["Select providers"]
+  E --> F["Invite providers"]
+  F --> G["Track accept + heartbeat"]
+  G --> H["Collect submit / failure"]
+  H --> I["Evaluate submissions"]
+  I --> J["Approve valid outputs"]
+  J --> K["Split payout across successful providers"]
+  K --> L["Write settlement record"]
+```
 
 ## Raid Status Values
 
@@ -50,8 +52,8 @@ Mercenary runs one state machine from request intake through settlement.
 - first heartbeat: `5000` ms
 - heartbeat stale: `8000` ms
 - hard execution: `60000` ms
-- absolute raid cap: `90000` ms
-- provider freshness window: `60000` ms
+- raid absolute: `90000` ms
+- provider freshness: `60000` ms
 
 These map to:
 
@@ -64,14 +66,14 @@ These map to:
 
 ## Failure And Cancellation Rules
 
-- if no eligible providers are fresh and ready, spawn fails with `409 no_eligible_providers`
-- if a raid is cancelled, later provider heartbeats, failures, and submissions are ignored
+- no eligible providers: `409 no_eligible_providers`
+- cancelled raids ignore later provider callbacks
 - unknown raid ids return `404`
-- provider callbacks without the active `providerRunId` are rejected
+- callbacks without the active `providerRunId` are rejected
 
 ## Evaluation Replay
 
-`POST /v1/evaluations/:raidId/replay` re-runs evaluation over stored submissions. It does not re-run the original provider jobs.
+`POST /v1/evaluations/:raidId/replay` re-runs evaluation over stored submissions. It does not re-run provider jobs.
 
 ## Next Steps
 

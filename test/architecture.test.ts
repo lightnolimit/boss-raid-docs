@@ -183,6 +183,11 @@ export const architectureTests: ArchitectureTestCase[] = [
       const markdown = [
         '# Demo',
         '',
+        '```mermaid',
+        'graph TD',
+        '  A[Start] --> B[Finish]',
+        '```',
+        '',
         '```ts:TypeScript|js:JavaScript',
         'const value = 1;',
         '---',
@@ -198,10 +203,12 @@ export const architectureTests: ArchitectureTestCase[] = [
         createId: createDeterministicIdGenerator(),
       });
 
-      assert.match(result.html, /data-codeblock-id="codeblock-1"/);
-      assert.match(result.html, /data-liveexample-id="liveexample-2"/);
+      assert.match(result.html, /data-mermaid-id="mermaid-1"/);
+      assert.match(result.html, /data-codeblock-id="codeblock-2"/);
+      assert.match(result.html, /data-liveexample-id="liveexample-3"/);
       assert.match(result.html, /data-language="html"/);
-      assert.deepEqual(result.codeBlocks.get('codeblock-1'), [
+      assert.equal(result.mermaidBlocks.get('mermaid-1'), 'graph TD\n  A[Start] --> B[Finish]');
+      assert.deepEqual(result.codeBlocks.get('codeblock-2'), [
         { language: 'ts', code: 'const value = 1;', label: 'TypeScript' },
         { language: 'js', code: 'const value = 1;', label: 'JavaScript' },
       ]);

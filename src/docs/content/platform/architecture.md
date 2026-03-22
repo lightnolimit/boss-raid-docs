@@ -1,20 +1,20 @@
 # Architecture
 
-Boss Raid is split into a thin HTTP API, a persistent orchestrator runtime, external HTTP providers, and shared packages that own parsing, routing, evaluation, persistence, and settlement concerns.
+Boss Raid has four layers: API, orchestrator, providers, and shared packages.
 
 ## System Shape
 
-```text
-client
-  -> apps/api
-    -> apps/orchestrator
-      -> packages/raid-core
-      -> packages/provider-registry
-      -> packages/evaluation
-      -> packages/persistence | packages/persistence-sqlite
-      -> packages/contracts
-    -> external HTTP providers
-      -> apps/provider-agent
+```mermaid
+flowchart TD
+  Client["Client"] --> API["apps/api"]
+  API --> Orchestrator["apps/orchestrator"]
+  Orchestrator --> Core["raid-core"]
+  Orchestrator --> Registry["provider-registry"]
+  Orchestrator --> Evaluation["evaluation"]
+  Orchestrator --> Persistence["persistence / persistence-sqlite"]
+  Orchestrator --> Contracts["contracts"]
+  Orchestrator --> Providers["HTTP providers"]
+  Providers --> Agent["apps/provider-agent"]
 ```
 
 ## App Responsibilities
@@ -22,8 +22,7 @@ client
 ### `apps/api`
 
 - public HTTP entrypoint
-- native raid route
-- chat compatibility route
+- native and compatibility routes
 - provider callback routes
 - provider registry routes
 - provider auth verification
@@ -32,17 +31,17 @@ client
 ### `apps/orchestrator`
 
 - sanitizes incoming tasks
-- selects providers from discovery results
+- selects providers from discovery
 - invites and tracks providers
-- enforces accept, heartbeat, hard execution, and absolute raid timeouts
+- enforces timeout rules
 - evaluates submissions
 - records provider reputation events
-- computes settlement and writes settlement artifacts
+- writes settlement artifacts
 
 ### `apps/provider-agent`
 
-- accepts `/v1/raid/accept`
-- runs provider work against a model backend
+- accepts assignments
+- runs provider work
 - emits heartbeats
 - submits outputs
 - reports failures
@@ -50,21 +49,20 @@ client
 ### `apps/web`
 
 - public landing surface
-- shows chat and native raid entrypoints
-- links to documentation
+- points users to the API and docs
 
 ### `apps/ops`
 
 - operator surface
-- shows providers, raids, approved outputs, settlement, and health
+- shows raids, providers, settlement, and health
 
 ### `apps/mcp-server`
 
 - stateless MCP adapter
-- forwards tool calls to the Boss Raid HTTP API
-- does not own its own orchestrator state
+- forwards tool calls to the HTTP API
+- does not own state
 
-## Shared Package Responsibilities
+## Core Packages
 
 - `@bossraid/api-contracts`: request parsing and payload normalization
 - `@bossraid/shared-types`: runtime type model
@@ -81,12 +79,11 @@ client
 
 ## Current Truth
 
-- the raid selector uses the same discovery path as `/agents/discover`
-- static manifest providers and registered providers normalize into one runtime shape
+- raid selection uses the same discovery path as `/agents/discover`
+- manifest and registered providers normalize into one runtime shape
 - only fresh `available` providers are routable
-- live discovery and raid spawn both probe provider readiness before routing
-- provider callbacks are bound to the accepted `providerRunId`
-- SQLite is the local default persisted backend
+- callbacks are bound to `providerRunId`
+- SQLite is the local default
 
 ## Next Steps
 

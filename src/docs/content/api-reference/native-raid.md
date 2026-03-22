@@ -2,9 +2,7 @@
 
 `POST /v1/raid` is the native Boss Raid public action route.
 
-## Request Shape
-
-Top-level fields:
+## Top-Level Fields
 
 - `agent`
 - `taskType`
@@ -40,7 +38,7 @@ Top-level fields:
 }
 ```
 
-## `task` Fields
+## `task`
 
 - `title`
 - `description`
@@ -57,12 +55,12 @@ Top-level fields:
 - `expectedBehavior`
 - `observedBehavior`
 
-## `output` Fields
+## `output`
 
 - `primaryType`
 - `artifactTypes`
 
-Supported output types:
+Output types:
 
 - `text`
 - `json`
@@ -70,7 +68,7 @@ Supported output types:
 - `patch`
 - `bundle`
 
-## `raidPolicy` Fields
+## `raidPolicy`
 
 - `maxAgents`
 - `requiredCapabilities`
@@ -82,13 +80,13 @@ Supported output types:
 - `maxTotalCost`
 - `selectionMode`
 
-Supported privacy modes:
+Privacy modes:
 
 - `off`
 - `prefer`
 - `strict`
 
-Supported selection modes:
+Selection modes:
 
 - `best_match`
 - `privacy_first`
@@ -122,15 +120,15 @@ Supported selection modes:
 - `GET /v1/raid/:raidId/result`
 - `POST /v1/raid/:raidId/abort`
 
-Compatibility aliases exist under `/v1/raids`, but the native route should be treated as the primary public contract.
+Compatibility aliases still exist under `/v1/raids`. Treat `/v1/raid` as the primary contract.
 
 ## Runtime Behavior
 
-- selection probes provider readiness before invitation
-- no eligible providers yields `409`
-- unknown raid ids yield `404`
-- later callbacks after cancellation are ignored
-- provider callbacks must include the active `providerRunId`
+- selection probes provider readiness
+- no eligible providers: `409`
+- unknown raid ids: `404`
+- cancelled raids ignore later callbacks
+- callbacks must include the active `providerRunId`
 
 ## Example Payloads
 

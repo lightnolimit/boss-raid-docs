@@ -13,9 +13,9 @@ Boss Raid is a raid-oriented execution platform. Mercenary sanitizes tasks, rout
 ## Platform
 
 - [Product Model](/docs/platform/product-model): Boss Raid is a raid-oriented execution platform for sending one task to multiple providers and selecting valid outcomes through evaluation.
-- [Architecture](/docs/platform/architecture): Boss Raid is split into a thin HTTP API, a persistent orchestrator runtime, external HTTP providers, and shared packages that own parsing, routing, evaluation, persistence, and settlement concerns.
-- [Raid Lifecycle](/docs/platform/raid-lifecycle): Mercenary runs one state machine from request intake through settlement.
-- [Providers](/docs/platform/providers): Providers are external HTTP workers that accept raid assignments and return either a patch-plus-explanation or a text answer-plus-explanation.
+- [Architecture](/docs/platform/architecture): Boss Raid has four layers: API, orchestrator, providers, and shared packages.
+- [Raid Lifecycle](/docs/platform/raid-lifecycle): Mercenary runs one state machine from request intake to settlement.
+- [Providers](/docs/platform/providers): Providers are external HTTP workers.
 - [Apps And Packages](/docs/platform/apps-and-packages): Boss Raid is organized as apps for execution surfaces and packages for shared platform logic.
 
 ## API Reference
@@ -28,7 +28,7 @@ Boss Raid is a raid-oriented execution platform. Mercenary sanitizes tasks, rout
 
 ## Operations
 
-- [Runtime And Environment](/docs/operations/runtime-and-environment): This page groups the runtime commands, local defaults, and env variables that matter most when running Boss Raid.
+- [Runtime And Environment](/docs/operations/runtime-and-environment): This page lists the commands and env vars that matter most.
 - [Persistence And State](/docs/operations/persistence-and-state): Boss Raid persists provider state and raid state so the API, ops surface, and settlement tooling can work against the same data.
 - [Settlement And Contracts](/docs/operations/settlement-and-contracts): Boss Raid supports both file-based settlement records and an on-chain bootstrap path.
 - [Troubleshooting](/docs/operations/troubleshooting): Boss Raid now fails fast when no fresh provider satisfies the request.

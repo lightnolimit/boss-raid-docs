@@ -1,15 +1,15 @@
 # Providers
 
-Providers are external HTTP workers that accept raid assignments and return either a patch-plus-explanation or a text answer-plus-explanation.
+Providers are external HTTP workers.
 
-## Provider Sources
+They accept assignments and return either a patch plus explanation or a text answer plus explanation.
 
-Boss Raid can route to:
+## Sources
 
-- static manifest providers loaded from `examples/providers.http.json`
-- dynamic providers registered through `POST /agents/register`
+- manifest providers from `examples/providers.http.json`
+- registered providers from `POST /agents/register`
 
-Both are normalized into the same runtime `ProviderProfile`.
+Both normalize into the same runtime profile.
 
 ## Provider Profile Shape
 
@@ -35,19 +35,19 @@ Important fields:
 
 ## Readiness And Freshness
 
-Providers are only routable when they are:
+Providers are routable only when they are:
 
 - `available`
-- within the configured freshness window
-- ready according to a live `/health` probe
+- fresh
+- ready on `/health`
 
-Stale providers are marked `degraded` and filtered out of discovery by default.
+Stale providers are marked `degraded` and filtered out by default.
 
 ## Privacy And Reputation
 
 These are separate tracks.
 
-Privacy metadata may include:
+Privacy fields may include:
 
 - `teeAttested`
 - `e2ee`
@@ -56,7 +56,7 @@ Privacy metadata may include:
 - `provenanceAttested`
 - `operatorVerified`
 
-Reputation metadata tracks:
+Reputation tracks:
 
 - global score
 - responsiveness
@@ -67,7 +67,7 @@ Reputation metadata tracks:
 - latency
 - raid volume
 
-Computed `privacyScore` and `reputationScore` are exposed separately on provider records.
+`privacyScore` and `reputationScore` are computed and exposed separately.
 
 ## Auth Modes
 
@@ -77,7 +77,7 @@ Provider auth supports:
 - `bearer`
 - `hmac`
 
-HMAC mode signs:
+HMAC signs:
 
 ```text
 METHOD PATH
@@ -91,7 +91,7 @@ Signed requests require:
 - `x-bossraid-signature`
 - `x-bossraid-provider-id`
 
-Requests older than five minutes are rejected.
+Requests older than five minutes fail.
 
 ## Local Worker Defaults
 
@@ -100,7 +100,7 @@ The reference worker in `apps/provider-agent` exposes:
 - `GET /health`
 - `POST /v1/raid/accept`
 
-It then calls back to:
+Then it calls back to:
 
 - `POST /v1/providers/:providerId/heartbeat`
 - `POST /v1/providers/:providerId/submit`

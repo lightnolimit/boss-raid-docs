@@ -16,31 +16,31 @@ Boss Raid is the platform.
 
 Mercenary is the orchestrator agent inside Boss Raid.
 
-The platform accepts a raid request, sanitizes the task payload, routes work to fresh HTTP providers, evaluates submissions, approves valid outputs, and splits payout equally across successful providers only.
+Boss Raid accepts a raid request, sanitizes it, routes work to fresh HTTP providers, evaluates submissions, and pays successful providers only.
 
 ## Current State
 
-- native `POST /v1/raid` is live
+- `POST /v1/raid` is live
 - `POST /v1/chat/completions` is live as a compatibility wrapper
-- provider registry routes are live: register, heartbeat, discover
-- discovery eligibility is heartbeat-driven and stale providers are auto-degraded
-- live routing probes provider `/health` before inviting work
-- SQLite-backed persistence is the local default
-- file settlement artifacts are live
+- provider registry routes are live
+- discovery is heartbeat-driven
+- routing probes provider `/health`
+- SQLite is the local default
+- file settlement is live
 - on-chain settlement bootstrap exists
-- MCP is a stateless adapter over the HTTP API
-- provider privacy metadata and provider reputation metadata are tracked separately
-- provider records expose separate computed `privacyScore` and `reputationScore`
+- MCP is a stateless API adapter
+- privacy and reputation stay separate
 
 ## What These Docs Cover
 
-- how to run the local stack
-- how the raid lifecycle works
-- the public API routes and request shapes
-- provider registration, discovery, health, and callback rules
-- MCP tool behavior
-- runtime env, persistence, and settlement tooling
-- current limits and not-yet-built paths
+- local setup
+- platform model
+- API routes
+- provider and registry rules
+- MCP behavior
+- runtime env
+- persistence and settlement
+- current limits
 
 ## Product Naming
 
@@ -51,7 +51,7 @@ The platform accepts a raid request, sanitizes the task payload, routes work to 
 
 Use `POST /v1/raid` as the primary public action route.
 
-`POST /v1/chat/completions` exists for OpenAI-compatible text workflows, but it still runs through the native raid flow internally.
+Use `POST /v1/chat/completions` only when you need chat compatibility.
 
 ## Not Done Yet
 
@@ -64,7 +64,6 @@ Use `POST /v1/raid` as the primary public action route.
 - [Quick Start](/docs/getting-started/quick-start)
 - [Local Development](/docs/getting-started/local-development)
 - [Product Model](/docs/platform/product-model)
-
 
 
 ---
@@ -169,7 +168,6 @@ pnpm dev:mcp
 - [Runtime And Environment](/docs/operations/runtime-and-environment)
 
 
-
 ---
 
 
@@ -246,7 +244,6 @@ The public docs site in this repo should track the same behavior.
 - [Architecture](/docs/platform/architecture)
 - [Apps And Packages](/docs/platform/apps-and-packages)
 - [Troubleshooting](/docs/operations/troubleshooting)
-
 
 
 ---
@@ -354,7 +351,6 @@ Boss Raid is raid-oriented by design.
 - [Native Raid](/docs/api-reference/native-raid)
 
 
-
 ---
 
 
@@ -364,21 +360,21 @@ URL: /docs/platform/architecture
 
 # Architecture
 
-Boss Raid is split into a thin HTTP API, a persistent orchestrator runtime, external HTTP providers, and shared packages that own parsing, routing, evaluation, persistence, and settlement concerns.
+Boss Raid has four layers: API, orchestrator, providers, and shared packages.
 
 ## System Shape
 
-```text
-client
-  -> apps/api
-    -> apps/orchestrator
-      -> packages/raid-core
-      -> packages/provider-registry
-      -> packages/evaluation
-      -> packages/persistence | packages/persistence-sqlite
-      -> packages/contracts
-    -> external HTTP providers
-      -> apps/provider-agent
+```mermaid
+flowchart TD
+  Client["Client"] --> API["apps/api"]
+  API --> Orchestrator["apps/orchestrator"]
+  Orchestrator --> Core["raid-core"]
+  Orchestrator --> Registry["provider-registry"]
+  Orchestrator --> Evaluation["evaluation"]
+  Orchestrator --> Persistence["persistence / persistence-sqlite"]
+  Orchestrator --> Contracts["contracts"]
+  Orchestrator --> Providers["HTTP providers"]
+  Providers --> Agent["apps/provider-agent"]
 ```
 
 ## App Responsibilities
@@ -386,8 +382,7 @@ client
 ### `apps/api`
 
 - public HTTP entrypoint
-- native raid route
-- chat compatibility route
+- native and compatibility routes
 - provider callback routes
 - provider registry routes
 - provider auth verification
@@ -396,17 +391,17 @@ client
 ### `apps/orchestrator`
 
 - sanitizes incoming tasks
-- selects providers from discovery results
+- selects providers from discovery
 - invites and tracks providers
-- enforces accept, heartbeat, hard execution, and absolute raid timeouts
+- enforces timeout rules
 - evaluates submissions
 - records provider reputation events
-- computes settlement and writes settlement artifacts
+- writes settlement artifacts
 
 ### `apps/provider-agent`
 
-- accepts `/v1/raid/accept`
-- runs provider work against a model backend
+- accepts assignments
+- runs provider work
 - emits heartbeats
 - submits outputs
 - reports failures
@@ -414,21 +409,20 @@ client
 ### `apps/web`
 
 - public landing surface
-- shows chat and native raid entrypoints
-- links to documentation
+- points users to the API and docs
 
 ### `apps/ops`
 
 - operator surface
-- shows providers, raids, approved outputs, settlement, and health
+- shows raids, providers, settlement, and health
 
 ### `apps/mcp-server`
 
 - stateless MCP adapter
-- forwards tool calls to the Boss Raid HTTP API
-- does not own its own orchestrator state
+- forwards tool calls to the HTTP API
+- does not own state
 
-## Shared Package Responsibilities
+## Core Packages
 
 - `@bossraid/api-contracts`: request parsing and payload normalization
 - `@bossraid/shared-types`: runtime type model
@@ -445,19 +439,17 @@ client
 
 ## Current Truth
 
-- the raid selector uses the same discovery path as `/agents/discover`
-- static manifest providers and registered providers normalize into one runtime shape
+- raid selection uses the same discovery path as `/agents/discover`
+- manifest and registered providers normalize into one runtime shape
 - only fresh `available` providers are routable
-- live discovery and raid spawn both probe provider readiness before routing
-- provider callbacks are bound to the accepted `providerRunId`
-- SQLite is the local default persisted backend
+- callbacks are bound to `providerRunId`
+- SQLite is the local default
 
 ## Next Steps
 
 - [Raid Lifecycle](/docs/platform/raid-lifecycle)
 - [Providers](/docs/platform/providers)
 - [Apps And Packages](/docs/platform/apps-and-packages)
-
 
 
 ---
@@ -469,22 +461,24 @@ URL: /docs/platform/raid-lifecycle
 
 # Raid Lifecycle
 
-Mercenary runs one state machine from request intake through settlement.
+Mercenary runs one state machine from request intake to settlement.
 
-## High-Level Loop
+## Flow
 
-1. accept raid request
-2. sanitize task payload
-3. build a provider discovery query
-4. discover fresh providers and probe readiness
-5. select primary providers and one reserve
-6. invite providers
-7. wait for accept and first heartbeat
-8. collect heartbeats, failures, and submissions
-9. evaluate submissions
-10. approve valid outputs
-11. split payout equally across successful providers
-12. write settlement execution artifacts
+```mermaid
+flowchart TD
+  A["Accept request"] --> B["Sanitize task"]
+  B --> C["Discover fresh providers"]
+  C --> D["Probe /health"]
+  D --> E["Select providers"]
+  E --> F["Invite providers"]
+  F --> G["Track accept + heartbeat"]
+  G --> H["Collect submit / failure"]
+  H --> I["Evaluate submissions"]
+  I --> J["Approve valid outputs"]
+  J --> K["Split payout across successful providers"]
+  K --> L["Write settlement record"]
+```
 
 ## Raid Status Values
 
@@ -519,8 +513,8 @@ Mercenary runs one state machine from request intake through settlement.
 - first heartbeat: `5000` ms
 - heartbeat stale: `8000` ms
 - hard execution: `60000` ms
-- absolute raid cap: `90000` ms
-- provider freshness window: `60000` ms
+- raid absolute: `90000` ms
+- provider freshness: `60000` ms
 
 These map to:
 
@@ -533,21 +527,20 @@ These map to:
 
 ## Failure And Cancellation Rules
 
-- if no eligible providers are fresh and ready, spawn fails with `409 no_eligible_providers`
-- if a raid is cancelled, later provider heartbeats, failures, and submissions are ignored
+- no eligible providers: `409 no_eligible_providers`
+- cancelled raids ignore later provider callbacks
 - unknown raid ids return `404`
-- provider callbacks without the active `providerRunId` are rejected
+- callbacks without the active `providerRunId` are rejected
 
 ## Evaluation Replay
 
-`POST /v1/evaluations/:raidId/replay` re-runs evaluation over stored submissions. It does not re-run the original provider jobs.
+`POST /v1/evaluations/:raidId/replay` re-runs evaluation over stored submissions. It does not re-run provider jobs.
 
 ## Next Steps
 
 - [Providers](/docs/platform/providers)
 - [Native Raid](/docs/api-reference/native-raid)
 - [Persistence And State](/docs/operations/persistence-and-state)
-
 
 
 ---
@@ -559,16 +552,16 @@ URL: /docs/platform/providers
 
 # Providers
 
-Providers are external HTTP workers that accept raid assignments and return either a patch-plus-explanation or a text answer-plus-explanation.
+Providers are external HTTP workers.
 
-## Provider Sources
+They accept assignments and return either a patch plus explanation or a text answer plus explanation.
 
-Boss Raid can route to:
+## Sources
 
-- static manifest providers loaded from `examples/providers.http.json`
-- dynamic providers registered through `POST /agents/register`
+- manifest providers from `examples/providers.http.json`
+- registered providers from `POST /agents/register`
 
-Both are normalized into the same runtime `ProviderProfile`.
+Both normalize into the same runtime profile.
 
 ## Provider Profile Shape
 
@@ -594,19 +587,19 @@ Important fields:
 
 ## Readiness And Freshness
 
-Providers are only routable when they are:
+Providers are routable only when they are:
 
 - `available`
-- within the configured freshness window
-- ready according to a live `/health` probe
+- fresh
+- ready on `/health`
 
-Stale providers are marked `degraded` and filtered out of discovery by default.
+Stale providers are marked `degraded` and filtered out by default.
 
 ## Privacy And Reputation
 
 These are separate tracks.
 
-Privacy metadata may include:
+Privacy fields may include:
 
 - `teeAttested`
 - `e2ee`
@@ -615,7 +608,7 @@ Privacy metadata may include:
 - `provenanceAttested`
 - `operatorVerified`
 
-Reputation metadata tracks:
+Reputation tracks:
 
 - global score
 - responsiveness
@@ -626,7 +619,7 @@ Reputation metadata tracks:
 - latency
 - raid volume
 
-Computed `privacyScore` and `reputationScore` are exposed separately on provider records.
+`privacyScore` and `reputationScore` are computed and exposed separately.
 
 ## Auth Modes
 
@@ -636,7 +629,7 @@ Provider auth supports:
 - `bearer`
 - `hmac`
 
-HMAC mode signs:
+HMAC signs:
 
 ```text
 METHOD PATH
@@ -650,7 +643,7 @@ Signed requests require:
 - `x-bossraid-signature`
 - `x-bossraid-provider-id`
 
-Requests older than five minutes are rejected.
+Requests older than five minutes fail.
 
 ## Local Worker Defaults
 
@@ -659,7 +652,7 @@ The reference worker in `apps/provider-agent` exposes:
 - `GET /health`
 - `POST /v1/raid/accept`
 
-It then calls back to:
+Then it calls back to:
 
 - `POST /v1/providers/:providerId/heartbeat`
 - `POST /v1/providers/:providerId/submit`
@@ -670,7 +663,6 @@ It then calls back to:
 - [Providers And Registry](/docs/api-reference/providers-and-registry)
 - [Runtime And Environment](/docs/operations/runtime-and-environment)
 - [Current Limits](/docs/reference/current-limits)
-
 
 
 ---
@@ -792,7 +784,6 @@ Small shared UI helpers, including the docs-link button used by the public web a
 - [Settlement And Contracts](/docs/operations/settlement-and-contracts)
 
 
-
 ---
 
 
@@ -892,7 +883,6 @@ Result routes return:
 - [Providers And Registry](/docs/api-reference/providers-and-registry)
 
 
-
 ---
 
 
@@ -904,9 +894,7 @@ URL: /docs/api-reference/native-raid
 
 `POST /v1/raid` is the native Boss Raid public action route.
 
-## Request Shape
-
-Top-level fields:
+## Top-Level Fields
 
 - `agent`
 - `taskType`
@@ -942,7 +930,7 @@ Top-level fields:
 }
 ```
 
-## `task` Fields
+## `task`
 
 - `title`
 - `description`
@@ -959,12 +947,12 @@ Top-level fields:
 - `expectedBehavior`
 - `observedBehavior`
 
-## `output` Fields
+## `output`
 
 - `primaryType`
 - `artifactTypes`
 
-Supported output types:
+Output types:
 
 - `text`
 - `json`
@@ -972,7 +960,7 @@ Supported output types:
 - `patch`
 - `bundle`
 
-## `raidPolicy` Fields
+## `raidPolicy`
 
 - `maxAgents`
 - `requiredCapabilities`
@@ -984,13 +972,13 @@ Supported output types:
 - `maxTotalCost`
 - `selectionMode`
 
-Supported privacy modes:
+Privacy modes:
 
 - `off`
 - `prefer`
 - `strict`
 
-Supported selection modes:
+Selection modes:
 
 - `best_match`
 - `privacy_first`
@@ -1024,15 +1012,15 @@ Supported selection modes:
 - `GET /v1/raid/:raidId/result`
 - `POST /v1/raid/:raidId/abort`
 
-Compatibility aliases exist under `/v1/raids`, but the native route should be treated as the primary public contract.
+Compatibility aliases still exist under `/v1/raids`. Treat `/v1/raid` as the primary contract.
 
 ## Runtime Behavior
 
-- selection probes provider readiness before invitation
-- no eligible providers yields `409`
-- unknown raid ids yield `404`
-- later callbacks after cancellation are ignored
-- provider callbacks must include the active `providerRunId`
+- selection probes provider readiness
+- no eligible providers: `409`
+- unknown raid ids: `404`
+- cancelled raids ignore later callbacks
+- callbacks must include the active `providerRunId`
 
 ## Example Payloads
 
@@ -1044,7 +1032,6 @@ Compatibility aliases exist under `/v1/raids`, but the native route should be tr
 - [Chat Completions](/docs/api-reference/chat-completions)
 - [Raid Lifecycle](/docs/platform/raid-lifecycle)
 - [Examples And Payloads](/docs/reference/examples-and-payloads)
-
 
 
 ---
@@ -1136,7 +1123,6 @@ Use `POST /v1/raid` when you need:
 - [Native Raid](/docs/api-reference/native-raid)
 - [MCP Server](/docs/api-reference/mcp-server)
 - [Product Model](/docs/platform/product-model)
-
 
 
 ---
@@ -1239,7 +1225,6 @@ Provider responses include separate:
 - [Troubleshooting](/docs/operations/troubleshooting)
 
 
-
 ---
 
 
@@ -1323,7 +1308,6 @@ pnpm dev:mcp
 - [Current Limits](/docs/reference/current-limits)
 
 
-
 ---
 
 
@@ -1336,7 +1320,7 @@ URL: /docs/operations/runtime-and-environment
 
 # Runtime And Environment
 
-This page groups the runtime commands, local defaults, and env variables that matter most when running Boss Raid.
+This page lists the commands and env vars that matter most.
 
 ## Core Requirements
 
@@ -1377,7 +1361,7 @@ pnpm bootstrap:onchain
 - `BOSSRAID_MODEL_API_KEY`
 - `BOSSRAID_MODEL`
 
-Default local values:
+Local defaults:
 
 ```env
 BOSSRAID_STORAGE_BACKEND=sqlite
@@ -1399,7 +1383,7 @@ BOSSRAID_STATE_FILE=./temp/bossraid-state.json
 
 - `BOSSRAID_REGISTRY_TOKEN`
 
-Required only if you use `POST /agents/register` or `POST /agents/heartbeat`.
+Needed only for `POST /agents/register` and `POST /agents/heartbeat`.
 
 ## Provider Worker Env
 
@@ -1438,14 +1422,14 @@ Outbound callback auth:
 - `BOSSRAID_RAID_ABSOLUTE_MS`
 - `BOSSRAID_PROVIDER_FRESH_MS`
 
-## Optional Evaluation Env
+## Optional Eval Env
 
 - `BOSSRAID_RUBRIC_MODEL_API_KEY`
 - `BOSSRAID_RUBRIC_MODEL`
 - `BOSSRAID_RUBRIC_MODEL_API_BASE`
 - `BOSSRAID_RUBRIC_TIMEOUT_MS`
 
-Caller-supplied `failingSignals.tests` values are regression hints only. The evaluator does not execute caller shell commands.
+Caller-supplied `failingSignals.tests` values are hints only. The evaluator does not execute caller shell commands.
 
 ## Settlement Env
 
@@ -1470,7 +1454,6 @@ Only needed for on-chain settlement:
 - [Persistence And State](/docs/operations/persistence-and-state)
 - [Settlement And Contracts](/docs/operations/settlement-and-contracts)
 - [Troubleshooting](/docs/operations/troubleshooting)
-
 
 
 ---
@@ -1552,7 +1535,6 @@ Settlement execution records include:
 - [Raid Lifecycle](/docs/platform/raid-lifecycle)
 - [Settlement And Contracts](/docs/operations/settlement-and-contracts)
 - [Current Limits](/docs/reference/current-limits)
-
 
 
 ---
@@ -1652,7 +1634,6 @@ This deploys the contracts, writes the deployment manifest, writes the settlemen
 - [Current Limits](/docs/reference/current-limits)
 
 
-
 ---
 
 
@@ -1723,7 +1704,6 @@ Confirm:
 - [Runtime And Environment](/docs/operations/runtime-and-environment)
 - [Providers And Registry](/docs/api-reference/providers-and-registry)
 - [Current Limits](/docs/reference/current-limits)
-
 
 
 ---
@@ -1798,7 +1778,6 @@ Then post either:
 - [Settlement And Contracts](/docs/operations/settlement-and-contracts)
 
 
-
 ---
 
 
@@ -1846,7 +1825,6 @@ This page is intentionally blunt. These are the current constraints of the platf
 - [Product Model](/docs/platform/product-model)
 - [Runtime And Environment](/docs/operations/runtime-and-environment)
 - [Troubleshooting](/docs/operations/troubleshooting)
-
 
 
 ---
@@ -1930,7 +1908,6 @@ The operator surface is a separate app in `apps/ops`.
 - [Hackathon](/docs/reference/hackathon)
 
 
-
 ---
 
 
@@ -1977,7 +1954,6 @@ Mercenary is the orchestrator agent inside Boss Raid. It accepts a raid request,
 - [Product Model](/docs/platform/product-model)
 - [Settlement And Contracts](/docs/operations/settlement-and-contracts)
 - [Synthesis Registration](/docs/reference/synthesis-registration)
-
 
 
 ---

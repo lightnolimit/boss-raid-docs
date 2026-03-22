@@ -1,6 +1,6 @@
 # Runtime And Environment
 
-This page groups the runtime commands, local defaults, and env variables that matter most when running Boss Raid.
+This page lists the commands and env vars that matter most.
 
 ## Core Requirements
 
@@ -41,7 +41,7 @@ pnpm bootstrap:onchain
 - `BOSSRAID_MODEL_API_KEY`
 - `BOSSRAID_MODEL`
 
-Default local values:
+Local defaults:
 
 ```env
 BOSSRAID_STORAGE_BACKEND=sqlite
@@ -63,7 +63,7 @@ BOSSRAID_STATE_FILE=./temp/bossraid-state.json
 
 - `BOSSRAID_REGISTRY_TOKEN`
 
-Required only if you use `POST /agents/register` or `POST /agents/heartbeat`.
+Needed only for `POST /agents/register` and `POST /agents/heartbeat`.
 
 ## Provider Worker Env
 
@@ -102,14 +102,14 @@ Outbound callback auth:
 - `BOSSRAID_RAID_ABSOLUTE_MS`
 - `BOSSRAID_PROVIDER_FRESH_MS`
 
-## Optional Evaluation Env
+## Optional Eval Env
 
 - `BOSSRAID_RUBRIC_MODEL_API_KEY`
 - `BOSSRAID_RUBRIC_MODEL`
 - `BOSSRAID_RUBRIC_MODEL_API_BASE`
 - `BOSSRAID_RUBRIC_TIMEOUT_MS`
 
-Caller-supplied `failingSignals.tests` values are regression hints only. The evaluator does not execute caller shell commands.
+Caller-supplied `failingSignals.tests` values are hints only. The evaluator does not execute caller shell commands.
 
 ## Settlement Env
 
