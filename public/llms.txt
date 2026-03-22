@@ -1,46 +1,43 @@
-# papers Documentation
+# Boss Raid Docs Documentation
 
-> Static documentation template
+> Mercenary orchestration, provider routing, and settlement
 
-A minimal docs starter with install-ready defaults, generated content, and static-host deployment support.
+Boss Raid is a raid-oriented execution platform. Mercenary sanitizes tasks, routes work to fresh HTTP providers, evaluates submissions, and splits payout equally across successful providers only.
 
 ## Getting Started
 
-- [Introduction](/docs/getting-started/introduction): `papers` is a static docs template for teams that want a polished documentation site without adding a CMS or backend first.
-- [Quick Start](/docs/getting-started/quick-start): Use this path if you want your own docs site running quickly with the least amount of ceremony.
-- [Installation](/docs/getting-started/installation): - Node.js 18 or newer
+- [Introduction](/docs/getting-started/introduction): Boss Raid is the platform.
+- [Quick Start](/docs/getting-started/quick-start): Use this path if you want Boss Raid running locally with the fewest steps.
+- [Local Development](/docs/getting-started/local-development): Boss Raid is a pnpm monorepo with app surfaces, shared packages, examples, scripts, and internal markdown docs in the main app repo.
 
-## User Guide
+## Platform
 
-- [Basic Usage](/docs/user-guide/basic-usage): The day-to-day workflow is simple: edit content, regenerate docs output, preview locally, then ship a static build.
-- [Advanced Features](/docs/user-guide/advanced-features): `papers` ships with more than plain Markdown rendering.
-- [Configuration](/docs/user-guide/configuration): Most customization happens in a small set of files.
-- [Troubleshooting](/docs/user-guide/troubleshooting): The app reads generated JSON, not raw Markdown directly.
-- [Command Palette](/docs/user-guide/command-palette): The command palette is the fastest way to move through the site.
-- [Interactive Map](/docs/user-guide/interactive-map): The interactive map renders the documentation tree as a graph in the right rail.
+- [Product Model](/docs/platform/product-model): Boss Raid is a raid-oriented execution platform for sending one task to multiple providers and selecting valid outcomes through evaluation.
+- [Architecture](/docs/platform/architecture): Boss Raid is split into a thin HTTP API, a persistent orchestrator runtime, external HTTP providers, and shared packages that own parsing, routing, evaluation, persistence, and settlement concerns.
+- [Raid Lifecycle](/docs/platform/raid-lifecycle): Mercenary runs one state machine from request intake through settlement.
+- [Providers](/docs/platform/providers): Providers are external HTTP workers that accept raid assignments and return either a patch-plus-explanation or a text answer-plus-explanation.
+- [Apps And Packages](/docs/platform/apps-and-packages): Boss Raid is organized as apps for execution surfaces and packages for shared platform logic.
 
 ## API Reference
 
-- [Overview](/docs/api-reference/overview): This section covers the internal runtime and build APIs that power the template.
-- [Content Pipeline](/docs/api-reference/content-pipeline): The content pipeline turns Markdown source files into static artifacts the app can load directly.
-- [Runtime APIs](/docs/api-reference/runtime-apis): Fetches and caches `/docs-index.json` for the current session.
+- [Overview](/docs/api-reference/overview): The public HTTP API is implemented in the app repo under `apps/api/src/index.ts`.
+- [Native Raid](/docs/api-reference/native-raid): `POST /v1/raid` is the native Boss Raid public action route.
+- [Chat Completions](/docs/api-reference/chat-completions): `POST /v1/chat/completions` exists for text-first, OpenAI-compatible workflows.
+- [Providers And Registry](/docs/api-reference/providers-and-registry): This section covers both provider callback routes and the public registry/discovery surface.
+- [MCP Server](/docs/api-reference/mcp-server): Boss Raid ships an MCP adapter in `apps/mcp-server`.
 
-## Developer Guides
+## Operations
 
-- [Code Examples](/docs/developer-guides/code-examples): This page shows the main authoring patterns supported by the current runtime.
-- [Best Practices](/docs/developer-guides/best-practices): Treat `shared/documentation-config.js` as the source of truth for navigation.
-- [Design System](/docs/developer-guides/design-system): The current visual system is intentionally minimal: monochrome, high-contrast, and token-driven.
-- [UI Configuration](/docs/developer-guides/ui-configuration): The docs shell is mostly configured through a few focused files.
-- [Icon Customization](/docs/developer-guides/icon-customization): The app uses Iconify for most UI icons and a small amount of custom SVG usage when you want full control.
+- [Runtime And Environment](/docs/operations/runtime-and-environment): This page groups the runtime commands, local defaults, and env variables that matter most when running Boss Raid.
+- [Persistence And State](/docs/operations/persistence-and-state): Boss Raid persists provider state and raid state so the API, ops surface, and settlement tooling can work against the same data.
+- [Settlement And Contracts](/docs/operations/settlement-and-contracts): Boss Raid supports both file-based settlement records and an on-chain bootstrap path.
+- [Troubleshooting](/docs/operations/troubleshooting): Boss Raid now fails fast when no fresh provider satisfies the request.
 
-## Platform Guides
+## Reference
 
-- [Cloudflare](/docs/deployment/platforms/cloudflare): Use these values in Cloudflare Pages:
-- [Vercel](/docs/deployment/platforms/vercel): When importing the repo, use:
-- [Netlify](/docs/deployment/platforms/netlify): Use these values in Netlify:
-
-## Deployment
-
-- [Overview](/docs/deployment/overview): `papers` builds to a static site with route-specific HTML output.
-- [Production Setup](/docs/deployment/production-setup): Before you ship, set the values users and crawlers should actually see. You can provide them through `.env.local`, `.env.production`, or your host's build environment.
+- [Examples And Payloads](/docs/reference/examples-and-payloads): The Boss Raid app repo ships a small set of source-of-truth example payloads.
+- [Current Limits](/docs/reference/current-limits): This page is intentionally blunt. These are the current constraints of the platform, not aspirational marketing.
+- [UI Direction](/docs/reference/ui-direction): Boss Raid has two different UI surfaces and they should stay different.
+- [Hackathon](/docs/reference/hackathon): Boss Raid.
+- [Synthesis Registration](/docs/reference/synthesis-registration): This page captures the current registration decision and the required fields for the SYNTHESIS flow.
 

@@ -1,32 +1,44 @@
-# papers
+# Boss Raid Docs
 
-`papers` is a static documentation starter built with React, Vite, TypeScript, generated Markdown content, Pagefind search, `llms.txt` exports, and SEO-friendly static route metadata.
+This repo is the documentation site for Boss Raid.
 
-If you are evaluating the template, start in the app at `/docs/getting-started/introduction`.
-If you are adopting it for your own project, this is the shortest path:
+Boss Raid is the platform. Mercenary is the orchestrator agent inside Boss Raid. These docs cover the public raid-oriented API, provider worker model, registry and discovery flow, ops surfaces, persistence, settlement, and the current limits of the stack.
+
+Production URL: `https://boss-raid-docs.pages.dev`
+
+Start in the app at `/docs/getting-started/introduction`.
+
+## Run Locally
 
 ```bash
-git clone git@github.com:thomasjvu/papers.git
-cd papers
+git clone git@github.com-lite:lightnolimit/boss-raid-docs.git
+cd boss-raid-docs
 npm install
 npm run dev
 ```
 
-The dev server runs at `http://localhost:3333`.
+The docs app runs at `http://localhost:3333`.
 
 ## Start Here
 
 - Product overview: `/docs/getting-started/introduction`
-- Setup path: `/docs/getting-started/quick-start`
-- Environment and validation: `/docs/getting-started/installation`
-- Deployment checklist: `/docs/deployment/production-setup`
+- Local setup: `/docs/getting-started/quick-start`
+- Native API: `/docs/api-reference/native-raid`
+- Runtime and env: `/docs/operations/runtime-and-environment`
 
-## Writer And Developer Workflow
+## Content Model
 
-1. Update `shared/documentation-config.js` if the docs tree or homepage copy needs to change.
-2. Edit Markdown in `src/docs/content/`.
-3. If `npm run dev` is already running, rerun `npm run generate:docs` after docs-tree or Markdown changes.
-4. Rerun `npm run generate:seo` after changing `VITE_SITE_URL`, homepage messaging, or page descriptions. The generator follows Vite env resolution, so `.env`, `.env.local`, `.env.production`, and host build env variables are all supported.
+- `shared/documentation-config.js` is the docs tree and homepage source of truth
+- `src/docs/content/` contains the markdown source pages
+- `public/docs-content/` and `public/docs-index.json` are generated artifacts
+- `public/llms.txt` and `public/llms-full.txt` are AI-facing exports generated from the docs corpus
+
+## Writer Workflow
+
+1. Update `shared/documentation-config.js` when the docs tree, hero copy, or footer links need to change.
+2. Edit markdown under `src/docs/content/`.
+3. If `npm run dev` is already running, rerun `npm run generate:docs` after docs-tree or markdown changes.
+4. Rerun `npm run generate:seo` after changing `VITE_SITE_URL`, homepage messaging, or page descriptions.
 5. Run `npm run generate:llms` if you want fresh AI exports without a full build.
 6. Run `npm test`, `npm run lint`, `npm run build`, and `npm run release:check` before shipping.
 
@@ -43,37 +55,17 @@ npm run build
 npm run release:check
 ```
 
-## What To Customize First
+## Source Of Truth
 
-- `shared/documentation-config.js`: docs tree, homepage copy, footer links
-- `src/docs/content/`: the pages your users read
-- `.env.local`: site name, canonical URL, GitHub repo metadata
-- `src/globals.css`: theme tokens, typography, code styling
-- `src/constants/social.tsx`: footer links
+The docs content is derived from the live Boss Raid app repo and its current internal docs:
 
-## Build Output
+- app repo: `https://github.com/lightnolimit/boss-raid`
+- monorepo docs: `README.md`, `docs/architecture.md`, `docs/interfaces.md`, `docs/runtime.md`, `docs/ui.md`, `docs/hackathon.md`, `docs/synthesis-registration.md`
+- runtime source: `apps/api`, `apps/orchestrator`, `apps/provider-agent`, `apps/mcp-server`, and the shared packages
 
-`npm run build` regenerates and packages:
+When behavior changes in the app repo, update this repo to keep the external docs current.
 
-- `public/docs-index.json`
-- `public/docs-content/**/*.json`
-- `public/robots.txt`
-- `public/sitemap.xml`
-- `public/images/og-image.svg`
-- `public/images/twitter-card.svg`
-- `public/llms.txt`
-- `public/llms-full.txt`
-- route-specific HTML files in `dist/`
-- the Pagefind search index in `dist/pagefind/`
-- the final static app in `dist/`
-
-## SEO Notes
-
-Set `VITE_SITE_URL` in `.env.local`, `.env.production`, or your host build environment if you want canonical URLs, sitemap entries, and social metadata to use your real production domain.
-
-Add `description:` frontmatter to any Markdown page that needs a custom search or social summary. If you omit it, the generator uses the first meaningful paragraph.
-
-## Release Docs
+## Release Notes
 
 - [RELEASING.md](RELEASING.md)
 - [CHANGELOG.md](CHANGELOG.md)
@@ -81,4 +73,3 @@ Add `description:` frontmatter to any Markdown page that needs a custom search o
 ## License
 
 MIT. See [LICENSE](LICENSE).
-

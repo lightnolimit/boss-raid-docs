@@ -7,9 +7,9 @@ This repo is ready to ship from `main` once the validation commands pass.
 1. Confirm production metadata is set.
 
 ```bash
-VITE_SITE_NAME="Your Docs"
+VITE_SITE_NAME="Boss Raid Docs"
 VITE_SITE_URL="https://docs.example.com"
-VITE_GITHUB_URL="https://github.com/your-org/your-repo"
+VITE_GITHUB_URL="https://github.com/lightnolimit/boss-raid-docs"
 VITE_GITHUB_BRANCH="main"
 ```
 

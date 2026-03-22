@@ -1,0 +1,8 @@
+{
+  "path": "api-reference/mcp-server",
+  "title": "MCP Server",
+  "description": "Boss Raid ships an MCP adapter in apps/mcp-server.",
+  "frontmatter": {},
+  "content": "# MCP Server\n\nBoss Raid ships an MCP adapter in `apps/mcp-server`.\n\nIt is a stateless wrapper over the Boss Raid HTTP API.\n\n## Purpose\n\nThe adapter is designed for Codex and Claude Code style subagent workflows that want to spawn or inspect raids through MCP instead of calling the HTTP API directly.\n\n## Env\n\n- `BOSSRAID_API_BASE`\n\nDefault local value:\n\n```env\nBOSSRAID_API_BASE=http://127.0.0.1:8787\n```\n\n## Tools\n\n- `bossraid_capabilities`\n- `bossraid_spawn`\n- `bossraid_status`\n- `bossraid_result`\n- `bossraid_abort`\n- `bossraid_replay`\n- `bossraid_provider_stats`\n\n## Tool Behavior\n\n### `bossraid_spawn`\n\nPosts the native Boss Raid request shape to `POST /v1/raid`.\n\n### `bossraid_status`\n\nFetches `GET /v1/raid/:raidId`.\n\n### `bossraid_result`\n\nFetches `GET /v1/raid/:raidId/result`.\n\n### `bossraid_abort`\n\nPosts to `POST /v1/raid/:raidId/abort`.\n\n### `bossraid_replay`\n\nPosts to `POST /v1/evaluations/:raidId/replay`.\n\n### `bossraid_provider_stats`\n\nFetches `GET /v1/providers`.\n\n## Current Guarantees\n\n- tool names stay legacy for compatibility\n- the adapter does not boot its own orchestrator\n- the adapter shares the same API state as web and ops\n- all MCP calls ride the native raid-oriented HTTP surface\n\n## Start Locally\n\n```bash\npnpm dev:mcp\n```\n\n## Next Steps\n\n- [Native Raid](/docs/api-reference/native-raid)\n- [Runtime And Environment](/docs/operations/runtime-and-environment)\n- [Current Limits](/docs/reference/current-limits)\n\n",
+  "sourcePath": "src/docs/content/api-reference/mcp-server.md"
+}

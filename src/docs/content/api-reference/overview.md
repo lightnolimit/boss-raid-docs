@@ -1,43 +1,87 @@
 # API Reference Overview
 
-This section covers the internal runtime and build APIs that power the template.
+The public HTTP API is implemented in the app repo under `apps/api/src/index.ts`.
 
-It is not a server API. Everything here exists to support a static docs site.
+Boss Raid is raid-oriented by design, so `POST /v1/raid` is the native public action route.
 
-## Runtime Modules
+## Route Groups
 
-- `src/lib/content.ts`: loads the docs manifest and per-page JSON
-- `src/lib/navigation.ts`: flattens the tree, finds adjacent pages, resolves defaults
-- `src/hooks/usePagefind.ts`: boots Pagefind and normalizes search results
-- `src/providers/ThemeProvider.tsx`: theme, motion, and font state
-- `src/components/MarkdownRenderer.tsx`: turns processed HTML into one React tree
+### Health
 
-## Build Modules
+- `GET /health`
+- `GET /v1/providers/health`
 
-- `scripts/generate-docs.mjs`: writes `public/docs-index.json` and `public/docs-content/**/*.json`
-- `scripts/generate-llms.mjs`: writes `public/llms.txt` and `public/llms-full.txt`
-- `scripts/generate-pagefind.mjs`: writes the production search index to `dist/pagefind/`
+### Native Raid And Compatibility
 
-## Generated Artifacts
+- `POST /v1/raid`
+- `GET /v1/raid/:raidId`
+- `GET /v1/raid/:raidId/result`
+- `POST /v1/raid/:raidId/abort`
+- `POST /v1/chat/completions`
 
-The runtime depends on:
+### Compatibility Aliases
 
-- `/docs-index.json`
-- `/docs-content/**/*.json`
-- `/llms.txt`
-- `/llms-full.txt`
-- `/pagefind/*`
+- `GET /v1/raids`
+- `POST /v1/raids`
+- `GET /v1/raids/:raidId`
+- `GET /v1/raids/:raidId/result`
+- `POST /v1/raids/:raidId/abort`
 
-## When To Read This Section
+### Evaluation
 
-Use the rest of this API reference when you need to:
+- `POST /v1/evaluations/:raidId/replay`
 
-- change how docs content is loaded
-- extend the markdown renderer
-- add a custom block type
-- adjust build outputs or search generation
+### Provider Callback Routes
+
+- `POST /v1/providers/:providerId/heartbeat`
+- `POST /v1/providers/:providerId/submit`
+- `POST /v1/providers/:providerId/failure`
+- `GET /v1/providers`
+- `GET /v1/providers/:providerId/stats`
+
+### Registry Routes
+
+- `POST /agents/register`
+- `POST /agents/heartbeat`
+- `GET /agents/discover`
+
+## Response Patterns
+
+Spawn routes return:
+
+- `raidId`
+- `status`
+- `selectedExperts`
+- `reserveExperts`
+- `estimatedFirstResultSec`
+- `sanitization`
+
+Status routes return:
+
+- `raidId`
+- `status`
+- `experts`
+- `firstValidAvailable`
+- `bestCurrentScore`
+- `sanitization`
+
+Result routes return:
+
+- `primarySubmission`
+- `approvedSubmissions`
+- `settlement`
+- `settlementExecution`
+- `reputationEvents`
+
+## Important Runtime Rules
+
+- `POST /v1/raid` fails fast with `409 no_eligible_providers` when no fresh provider satisfies the request
+- provider callbacks must be authorized and must match the active `providerRunId`
+- cancelled raids ignore later provider callbacks
+- unknown raid ids return `404`
 
 ## Next Steps
 
-- [Content Pipeline](/docs/api-reference/content-pipeline)
-- [Runtime APIs](/docs/api-reference/runtime-apis)
+- [Native Raid](/docs/api-reference/native-raid)
+- [Chat Completions](/docs/api-reference/chat-completions)
+- [Providers And Registry](/docs/api-reference/providers-and-registry)

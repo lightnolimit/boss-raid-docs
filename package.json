@@ -1,12 +1,12 @@
 {
-  "name": "papers",
+  "name": "boss-raid-docs",
   "version": "0.1.0",
   "private": true,
-  "description": "Static documentation template built with React, Vite, and TypeScript.",
+  "description": "Documentation site for the Boss Raid platform.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thomasjvu/papers.git"
+    "url": "git+https://github.com/lightnolimit/boss-raid-docs.git"
   },
   "type": "module",
   "scripts": {

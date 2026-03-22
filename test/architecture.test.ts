@@ -296,12 +296,14 @@ export const architectureTests: ArchitectureTestCase[] = [
       };
 
       const routes = createSeoRouteEntries(docsIndex, documents, {
-        siteName: 'papers',
+        siteName: 'Boss Raid Docs',
         siteSubtitle: 'Static documentation template',
         siteDescription: 'Minimal docs starter.',
       });
 
-      const canonicalDocRoute = routes.find((route) => route.routePath === '/docs/getting-started/introduction');
+      const canonicalDocRoute = routes.find(
+        (route) => route.routePath === '/docs/getting-started/introduction'
+      );
       const docsAliasRoute = routes.find((route) => route.routePath === '/docs');
       const llmsRoute = routes.find((route) => route.routePath === '/llms');
 
@@ -309,9 +311,16 @@ export const architectureTests: ArchitectureTestCase[] = [
       assert.equal(docsAliasRoute?.canonicalPath, '/docs/getting-started/introduction');
       assert.equal(llmsRoute?.description, 'AI exports.');
 
-      const sitemap = createSitemapXml(routes, 'https://docs.example.com', '2026-03-11T00:00:00.000Z');
+      const sitemap = createSitemapXml(
+        routes,
+        'https://docs.example.com',
+        '2026-03-11T00:00:00.000Z'
+      );
       assert.match(sitemap, /<loc>https:\/\/docs\.example\.com\/<\/loc>/);
-      assert.match(sitemap, /<loc>https:\/\/docs\.example\.com\/docs\/getting-started\/introduction<\/loc>/);
+      assert.match(
+        sitemap,
+        /<loc>https:\/\/docs\.example\.com\/docs\/getting-started\/introduction<\/loc>/
+      );
       assert.doesNotMatch(sitemap, /\/docs<\/loc>/);
 
       const robots = createRobotsTxt('https://docs.example.com');
@@ -336,9 +345,7 @@ export const architectureTests: ArchitectureTestCase[] = [
         );
         await writeFile(
           join(tempDir, '.env.local'),
-          ['VITE_GITHUB_BRANCH=local-branch', 'VITE_SITE_URL=https://local.example.com'].join(
-            '\n'
-          )
+          ['VITE_GITHUB_BRANCH=local-branch', 'VITE_SITE_URL=https://local.example.com'].join('\n')
         );
         await writeFile(
           join(tempDir, '.env.production'),
@@ -395,20 +402,17 @@ export const architectureTests: ArchitectureTestCase[] = [
         buildCanonicalDocsPath('guides/intro', { versionConfig, i18nConfig }),
         '/docs/2.0/en/guides/intro'
       );
-      assert.deepEqual(
-        buildDocsRouteVariants('guides/intro', { versionConfig, i18nConfig }),
-        [
-          '/docs/guides/intro',
-          '/docs/2.0/guides/intro',
-          '/docs/1.0/guides/intro',
-          '/docs/en/guides/intro',
-          '/docs/fr/guides/intro',
-          '/docs/2.0/en/guides/intro',
-          '/docs/2.0/fr/guides/intro',
-          '/docs/1.0/en/guides/intro',
-          '/docs/1.0/fr/guides/intro',
-        ]
-      );
+      assert.deepEqual(buildDocsRouteVariants('guides/intro', { versionConfig, i18nConfig }), [
+        '/docs/guides/intro',
+        '/docs/2.0/guides/intro',
+        '/docs/1.0/guides/intro',
+        '/docs/en/guides/intro',
+        '/docs/fr/guides/intro',
+        '/docs/2.0/en/guides/intro',
+        '/docs/2.0/fr/guides/intro',
+        '/docs/1.0/en/guides/intro',
+        '/docs/1.0/fr/guides/intro',
+      ]);
       assert.deepEqual(parseDocsRoutePath('2.0/fr/guides/intro', { versionConfig, i18nConfig }), {
         originalSlug: '2.0/fr/guides/intro',
         docPath: 'guides/intro',
@@ -661,7 +665,7 @@ export const architectureTests: ArchitectureTestCase[] = [
       };
 
       const routes = createSeoRouteEntries(docsIndex, documents, {
-        siteName: 'papers',
+        siteName: 'Boss Raid Docs',
         siteSubtitle: 'Static documentation template',
         siteDescription: 'Minimal docs starter.',
         versionConfig,
@@ -683,10 +687,10 @@ export const architectureTests: ArchitectureTestCase[] = [
       assert.equal(canonicalRoute?.includeInSitemap, true);
       assert.equal(aliasRoute?.canonicalPath, '/docs/2.0/en/getting-started/introduction');
       assert.equal(aliasRoute?.includeInSitemap, false);
-      assert.equal(aliasRoute?.title, 'Introduction | papers');
-      assert.equal(frenchRoute?.title, 'Introduction FR | papers');
+      assert.equal(aliasRoute?.title, 'Introduction | Boss Raid Docs');
+      assert.equal(frenchRoute?.title, 'Introduction FR | Boss Raid Docs');
       assert.equal(docsRootAlias?.canonicalPath, '/docs/2.0/en/getting-started/introduction');
-      assert.equal(docsRootAlias?.title, 'Introduction | papers');
+      assert.equal(docsRootAlias?.title, 'Introduction | Boss Raid Docs');
     },
   },
 ];

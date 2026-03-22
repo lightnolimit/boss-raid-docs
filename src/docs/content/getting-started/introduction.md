@@ -1,50 +1,54 @@
 # Introduction
 
-`papers` is a static docs template for teams that want a polished documentation site without adding a CMS or backend first.
+Boss Raid is the platform.
 
-It ships with a docs shell, generated Markdown content, Pagefind search, `llms.txt` exports, and a deployable static build with sitemap, robots, and route-level metadata support.
+Mercenary is the orchestrator agent inside Boss Raid.
 
-## What You Actually Customize
+The platform accepts a raid request, sanitizes the task payload, routes work to fresh HTTP providers, evaluates submissions, approves valid outputs, and splits payout equally across successful providers only.
 
-Most projects only need to touch four places:
+## Current State
 
-- `shared/documentation-config.js` for the docs tree and homepage copy
-- `src/docs/content/` for the Markdown pages users read
-- `.env.local` for site metadata, canonical URL, and GitHub links
-- `src/globals.css` for theme and typography tokens
+- native `POST /v1/raid` is live
+- `POST /v1/chat/completions` is live as a compatibility wrapper
+- provider registry routes are live: register, heartbeat, discover
+- discovery eligibility is heartbeat-driven and stale providers are auto-degraded
+- live routing probes provider `/health` before inviting work
+- SQLite-backed persistence is the local default
+- file settlement artifacts are live
+- on-chain settlement bootstrap exists
+- MCP is a stateless adapter over the HTTP API
+- provider privacy metadata and provider reputation metadata are tracked separately
+- provider records expose separate computed `privacyScore` and `reputationScore`
 
-## How The Template Works
+## What These Docs Cover
 
-There are three layers:
+- how to run the local stack
+- how the raid lifecycle works
+- the public API routes and request shapes
+- provider registration, discovery, health, and callback rules
+- MCP tool behavior
+- runtime env, persistence, and settlement tooling
+- current limits and not-yet-built paths
 
-1. structure in `shared/documentation-config.js`
-2. page content in `src/docs/content/`
-3. generated output in `public/docs-content/`, `public/docs-index.json`, and SEO artifacts in `public/`
+## Product Naming
 
-The browser reads the generated JSON, not the raw Markdown files. That keeps the runtime fast and host-friendly, but it also means content changes need regeneration.
+- Boss Raid = platform and public raid-oriented API
+- Mercenary = orchestrator agent inside the platform
 
-## What Ships Out Of The Box
+## Native Public Route
 
-- left-rail docs navigation with search and settings
-- right-rail table of contents and interactive map
-- command palette with local results, FAQ answers, and Pagefind results
-- tabbed code blocks, live HTML/CSS previews, color palettes, and wallet copy blocks
-- dark and light themes, reduced-motion support, and font cycling
-- `llms.txt` and `llms-full.txt` generation during build
-- robots, sitemap, social preview images, and route-level metadata generation
+Use `POST /v1/raid` as the primary public action route.
 
-## Learn These Files First
+`POST /v1/chat/completions` exists for OpenAI-compatible text workflows, but it still runs through the native raid flow internally.
 
-- `shared/documentation-config.js`
-- `src/docs/content/`
-- `src/lib/content.ts`
-- `src/utils/markdownCore.ts`
-- `src/components/MarkdownRenderer.tsx`
-- `scripts/generate-docs.mjs`
-- `scripts/generate-seo.mjs`
+## Not Done Yet
+
+- x402 payment flow
+- fully separate privacy and reputation storage/services
+- Cloudflare D1 adapter
 
 ## Next Steps
 
 - [Quick Start](/docs/getting-started/quick-start)
-- [Installation](/docs/getting-started/installation)
-- [Basic Usage](/docs/user-guide/basic-usage)
+- [Local Development](/docs/getting-started/local-development)
+- [Product Model](/docs/platform/product-model)

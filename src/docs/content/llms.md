@@ -1,33 +1,38 @@
 # LLMs.txt
 
-This template generates AI-facing text exports from the docs corpus.
+This docs site generates AI-facing exports from the Boss Raid documentation corpus.
 
 ## Generated Files
 
 - `/llms.txt`
 - `/llms-full.txt`
 
-## Why They Exist
+## Why They Matter
 
-These files give AI tools and internal agents a clean text entry point without requiring them to crawl the full UI.
+These files give agents and internal tooling a single text-first entry point into the Boss Raid docs without requiring them to crawl the full UI.
+
+That is useful for:
+
+- agent integration work
+- local coding assistants
+- MCP and automation consumers
+- retrieval and indexing systems
 
 ## How They Are Generated
 
-`npm run build` runs `scripts/generate-llms.mjs` automatically.
+`npm run build` regenerates them automatically.
 
-If you only want to refresh AI exports while writing, run:
+If you only want to refresh AI exports while writing docs, run:
 
 ```bash
 npm run generate:llms
 ```
 
-## When To Regenerate
+## Regenerate After
 
-Regenerate after:
-
-- changing Markdown content
-- renaming or restructuring docs sections
-- updating docs metadata that should appear in exported summaries
+- changing markdown content
+- changing docs structure
+- changing page descriptions or summaries that should appear in exports
 
 ## Helpful Links
 

@@ -7,7 +7,7 @@ import { applySeoMetadata } from '../utils/seo';
 import { extractDescriptionFromMarkdown } from '../../shared/seo.js';
 
 const logger = createLogger('LLMSPage');
-const SITE_NAME = import.meta.env.VITE_SITE_NAME || 'papers';
+const SITE_NAME = import.meta.env.VITE_SITE_NAME || 'Boss Raid Docs';
 
 export default function LLMSPage() {
   const [content, setContent] = useState<string>('');
@@ -57,7 +57,8 @@ export default function LLMSPage() {
 
     applySeoMetadata({
       title: `LLMs.txt | ${SITE_NAME}`,
-      description: description || 'AI-friendly text exports generated from the documentation corpus.',
+      description:
+        description || 'AI-friendly text exports generated from the documentation corpus.',
       path: '/llms',
       canonicalPath: '/llms',
       type: 'article',

@@ -94,7 +94,7 @@ const DocumentationPage = React.memo(
     const { prefersReducedMotion } = useTheme();
     const content = useMemo(() => stripMarkdownBom(initialContent), [initialContent]);
     const path = currentPath;
-    const siteName = import.meta.env.VITE_SITE_NAME || 'papers';
+    const siteName = import.meta.env.VITE_SITE_NAME || 'Boss Raid Docs';
     const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.platform);
     const shortcutLabel = isMac ? 'Cmd + K' : 'Ctrl + K';
     const nextPathLabel = useMemo(

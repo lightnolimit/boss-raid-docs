@@ -1,0 +1,8 @@
+{
+  "path": "reference/hackathon",
+  "title": "Hackathon",
+  "description": "Boss Raid.",
+  "frontmatter": {},
+  "content": "# Hackathon\n\n## Project\n\nBoss Raid.\n\n## Story\n\nBoss Raid is the platform and raid flow.\n\nMercenary is the orchestrator agent inside Boss Raid. It accepts a raid request, routes it to external providers, approves successful providers, and splits payout evenly across successful providers only.\n\n## Protocol Fit\n\n- ERC-8183: evaluator and settlement semantics\n- x402: target payment and discovery layer\n- privacy-aware routing: target submission angle\n\n## Current Demo Shape\n\n1. submit a task\n2. Mercenary selects providers\n3. one provider may fail or time out\n4. evaluator approves or rejects each provider\n5. approved providers are shown\n6. settlement shows equal split across approved providers\n\n## Current Gaps\n\n- x402 is not built yet\n- `POST /v1/chat/completions` exists, but it is still a compatibility wrapper over the raid flow\n- `POST /v1/raid` should remain the primary native route\n- privacy metadata, reputation metadata, and computed scores are separate fields, but not fully separate systems yet\n\n## Next Steps\n\n- [Product Model](/docs/platform/product-model)\n- [Settlement And Contracts](/docs/operations/settlement-and-contracts)\n- [Synthesis Registration](/docs/reference/synthesis-registration)\n\n",
+  "sourcePath": "src/docs/content/reference/hackathon.md"
+}

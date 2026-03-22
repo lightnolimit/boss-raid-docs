@@ -25,8 +25,8 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { label: 'Design System', href: '/docs/developer-guides/design-system' },
-  { label: 'Deployment', href: '/docs/deployment/overview' },
+  { label: 'Quick Start', href: '/docs/getting-started/quick-start' },
+  { label: 'Native Raid', href: '/docs/api-reference/native-raid' },
   { label: 'LLMs.txt', href: '/llms' },
 ];
 
@@ -51,7 +51,7 @@ export default function Navigation({
   const { prefersReducedMotion } = useTheme();
   const { openCommandPalette } = useCommandPalette();
   const isDocsPage = docsPath !== undefined;
-  const siteName = import.meta.env.VITE_SITE_NAME || 'papers';
+  const siteName = import.meta.env.VITE_SITE_NAME || 'Boss Raid Docs';
   const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.platform);
   const shortcutLabel = isMac ? 'Cmd + K' : 'Ctrl + K';
 

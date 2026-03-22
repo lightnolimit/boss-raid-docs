@@ -7,7 +7,7 @@ import { buildCanonicalDocsPath, buildDocsLandingPath } from '../../shared/docsR
 import { useCommandPalette } from '../providers/CommandPaletteProvider';
 import { applySeoMetadata } from '../utils/seo';
 
-const SITE_NAME = import.meta.env.VITE_SITE_NAME || 'papers';
+const SITE_NAME = import.meta.env.VITE_SITE_NAME || 'Boss Raid Docs';
 
 export default function NotFoundPage() {
   const location = useLocation();
@@ -155,7 +155,7 @@ export default function NotFoundPage() {
                 host rule is rewriting `/docs/*` or `/llms` back to the homepage.
               </p>
               <Link
-                to={buildCanonicalDocsPath('user-guide/troubleshooting')}
+                to={buildCanonicalDocsPath('operations/troubleshooting')}
                 className="inline-flex items-center gap-2"
                 style={{ color: 'var(--primary-color)', fontFamily: 'var(--mono-font)' }}
               >

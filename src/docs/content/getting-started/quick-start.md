@@ -1,82 +1,93 @@
 # Quick Start
 
-Use this path if you want your own docs site running quickly with the least amount of ceremony.
+Use this path if you want Boss Raid running locally with the fewest steps.
 
-## 1. Clone And Start The App
+## Requirements
+
+- Node.js 22+
+- pnpm 10+
+- a model API key
+- a model name
+
+## 1. Clone And Install
 
 ```bash
-git clone https://github.com/thomasjvu/papers.git
-cd papers
-npm install
-npm run dev
+git clone git@github.com:lightnolimit/boss-raid.git
+cd boss-raid
+pnpm install
 ```
 
-Open `http://localhost:3333`.
+## 2. Create Local Env
 
-## 2. Set Basic Metadata
+```bash
+cp .env.example .env
+```
 
-Create `.env.local` if you want your own site name, canonical URL, social metadata, or GitHub links.
+Set at least:
 
 ```env
-VITE_SITE_NAME="Your Docs"
-VITE_SITE_URL="https://docs.example.com"
-VITE_GITHUB_URL="https://github.com/your-org/your-repo"
-VITE_GITHUB_BRANCH="main"
+BOSSRAID_MODEL_API_KEY=...
+BOSSRAID_MODEL=gpt-4.1-mini
 ```
 
-`VITE_SITE_URL` is what powers canonical URLs, sitemap entries, and social preview metadata.
+The local defaults already point the stack at:
 
-## 3. Replace The Docs Tree
+- `BOSSRAID_STORAGE_BACKEND=sqlite`
+- `BOSSRAID_PROVIDERS_FILE=./examples/providers.http.json`
+- `BOSSRAID_SQLITE_FILE=./temp/bossraid-state.sqlite`
 
-Edit `shared/documentation-config.js` so the sections, page names, tags, homepage hero, and footer links match your project.
-
-## 4. Replace The Markdown
-
-Write your real content in `src/docs/content/`.
-
-Each `path` in the shared docs tree should map to one Markdown file with the same relative path.
-
-## 5. Regenerate Docs While You Work
-
-The app reads generated JSON from `public/docs-content/`, not raw Markdown directly.
-
-If the dev server is already running, rerun this after changing Markdown or the docs tree:
+## 3. Validate The Workspace
 
 ```bash
-npm run generate:docs
+pnpm check
+pnpm build
 ```
 
-If you changed metadata that affects sitemap, canonical tags, or share previews, also run:
+## 4. Start The Full Stack
 
 ```bash
-npm run generate:seo
+pnpm dev
 ```
 
-If you want fresh AI exports too, run:
+This starts:
+
+- API on `http://127.0.0.1:8787`
+- web on `http://127.0.0.1:4173`
+- ops on `http://127.0.0.1:4174`
+- local providers on `http://127.0.0.1:9001`, `9002`, and `9003`
+
+## 5. Hit The Native Route
 
 ```bash
-npm run generate:llms
+curl -X POST http://127.0.0.1:8787/v1/raid \
+  -H "content-type: application/json" \
+  -d '{
+    "agent": "mercenary-v1",
+    "taskType": "document_analysis",
+    "task": {
+      "title": "Review the memo",
+      "description": "Summarize the main risks and open questions.",
+      "language": "text",
+      "files": [],
+      "failingSignals": { "errors": [] }
+    },
+    "output": { "primaryType": "text", "artifactTypes": ["text", "json"] },
+    "raidPolicy": { "maxAgents": 3, "privacyMode": "prefer" }
+  }'
 ```
 
-## 6. Validate Before Shipping
+## If You Want Separate Processes
 
 ```bash
-npm test
-npm run lint
-npm run build
-npm run release:check
+pnpm dev:providers
+pnpm dev:api
+pnpm dev:web
+pnpm dev:ops
+pnpm dev:mcp
 ```
-
-## Recommended First Edits
-
-- set your site metadata in `.env.local`
-- trim unused sections from the shared docs tree
-- replace the sample docs content
-- update social links and homepage copy
-- run a full build before the first deploy
 
 ## Next Steps
 
-- [Installation](/docs/getting-started/installation)
-- [Configuration](/docs/user-guide/configuration)
-- [Deployment Overview](/docs/deployment/overview)
+- [Local Development](/docs/getting-started/local-development)
+- [Native Raid](/docs/api-reference/native-raid)
+- [Runtime And Environment](/docs/operations/runtime-and-environment)
