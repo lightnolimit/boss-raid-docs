@@ -30,6 +30,7 @@ The docs app runs at `http://localhost:3333`.
 
 - `shared/documentation-config.js` is the docs tree and homepage source of truth
 - `src/docs/content/` contains the markdown source pages
+- `src/lib/generated/icon-collections.ts` is generated from the icons used by the app and shared config
 - `public/docs-content/` and `public/docs-index.json` are generated artifacts
 - `public/llms.txt` and `public/llms-full.txt` are AI-facing exports generated from the docs corpus
 
@@ -37,15 +38,17 @@ The docs app runs at `http://localhost:3333`.
 
 1. Update `shared/documentation-config.js` when the docs tree, hero copy, or footer links need to change.
 2. Edit markdown under `src/docs/content/`.
-3. If `npm run dev` is already running, rerun `npm run generate:docs` after docs-tree or markdown changes.
-4. Rerun `npm run generate:seo` after changing `VITE_SITE_URL`, homepage messaging, or page descriptions.
-5. Run `npm run generate:llms` if you want fresh AI exports without a full build.
-6. Run `npm test`, `npm run lint`, `npm run build`, and `npm run release:check` before shipping.
+3. Rerun `npm run generate:icons` after changing icon usage in `src/` or `shared/`.
+4. If `npm run dev` is already running, rerun `npm run generate:docs` after docs-tree or markdown changes.
+5. Rerun `npm run generate:seo` after changing `VITE_SITE_URL`, homepage messaging, or page descriptions.
+6. Run `npm run generate:llms` if you want fresh AI exports without a full build.
+7. Run `npm test`, `npm run lint`, `npm run build`, and `npm run release:check` before shipping.
 
 ## Core Commands
 
 ```bash
 npm run dev
+npm run generate:icons
 npm run generate:docs
 npm run generate:seo
 npm run generate:llms

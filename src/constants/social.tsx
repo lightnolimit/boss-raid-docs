@@ -1,7 +1,6 @@
 import { Icon } from '@iconify/react';
 
-const githubHref =
-  import.meta.env.VITE_GITHUB_URL || 'https://github.com/lightnolimit/boss-raid-docs';
+const githubHref = import.meta.env.VITE_GITHUB_URL || 'https://github.com/lightnolimit/boss-raid';
 
 export const socialLinks = [
   {

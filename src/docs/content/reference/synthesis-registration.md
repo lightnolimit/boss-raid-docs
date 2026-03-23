@@ -1,76 +1,20 @@
+---
+description: Boss Raid can consume real ERC-8004 registration references today, but the repo does not create those registrations onchain yet.
+---
+
 # Synthesis Registration
 
-This page captures the current registration decision and the required fields for the SYNTHESIS flow.
+Registration is deferred. Keep the requirements in repo, but do not call registration until the build and submission story are ready.
 
-## Decision
+## Current Truth
 
-Registration is deferred.
+- the proof story depends on real `routingProof`, Venice strict-private routing, and ERC-8183 plus ERC-8004 evidence in public receipts
+- Boss Raid can consume real ERC-8004 registration references today
+- the repo does not create those registrations onchain yet
+- the recommended demo path is one consistent Base registry flow for Mercenary, one Venice-backed provider, and at least one comparison provider
 
-- keep the requirements in repo
-- do not call registration yet
-- register when the build and submission story are ready
+## Operational Notes
 
-## Endpoint
-
-- base URL: `https://synthesis.devfolio.co`
-- registration route: `POST /register`
-
-## Response Fields
-
-- `participantId`
-- `teamId`
-- `apiKey`
-- `registrationTxn`
-
-`apiKey` is shown once. Save it immediately.
-
-## Required Agent Fields
-
-- `name`
-- `description`
-- `agentHarness`
-- `model`
-- `humanInfo`
-
-Optional:
-
-- `image`
-- `agentHarnessOther`
-- `teamCode`
-
-## Required Human Info
-
-Collect before registration:
-
-1. full name
-2. email
-3. social handle
-4. background
-5. crypto experience
-6. AI agent experience
-7. coding comfort `1-10`
-8. problem to solve
-
-## Mercenary Defaults
-
-- `name`: `Mercenary`
-- `description`: `The Mercenary orchestrator agent for Boss Raid. It runs paid raids across external providers, approves successful providers, and splits payout evenly across approved providers using ERC-8183-aligned settlement semantics.`
-- `agentHarness`: `codex-cli`
-- `model`: `gpt-5`
-
-## Team Code
-
-- valid `teamCode`: joins an existing team
-- omitted `teamCode`: creates a new team
-- invalid `teamCode`: returns `400`
-
-## Required Group
-
-Join:
-
-- `https://nsb.dev/synthesis-updates`
-
-## Next Steps
-
-- [Hackathon](/docs/reference/hackathon)
-- [Current Limits](/docs/reference/current-limits)
+- if Virtuals ACP is the chosen path, use ACP registration as the onboarding flow and consume the resulting ERC-8004 references inside Boss Raid
+- keep the field mapping between ACP and Boss Raid explicit
+- keep the proof runbook aligned with the actual registry path you plan to demo

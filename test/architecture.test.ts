@@ -304,8 +304,8 @@ export const architectureTests: ArchitectureTestCase[] = [
 
       const routes = createSeoRouteEntries(docsIndex, documents, {
         siteName: 'Boss Raid Docs',
-        siteSubtitle: 'Static documentation template',
-        siteDescription: 'Minimal docs starter.',
+        siteSubtitle: 'Raid-oriented multi-agent orchestration',
+        siteDescription: 'Boss Raid public docs.',
       });
 
       const canonicalDocRoute = routes.find(
@@ -337,7 +337,7 @@ export const architectureTests: ArchitectureTestCase[] = [
   {
     name: 'loadViteEnv follows Vite env precedence across mode files and process env',
     run: async () => {
-      const tempDir = await mkdtemp(join(tmpdir(), 'papers-env-'));
+      const tempDir = await mkdtemp(join(tmpdir(), 'bossraid-docs-env-'));
       const previousValues = {
         VITE_SITE_NAME: process.env.VITE_SITE_NAME,
         VITE_SITE_URL: process.env.VITE_SITE_URL,
@@ -362,7 +362,7 @@ export const architectureTests: ArchitectureTestCase[] = [
         );
         await writeFile(
           join(tempDir, '.env.production.local'),
-          'VITE_GITHUB_URL=https://github.com/example/papers'
+          'VITE_GITHUB_URL=https://github.com/example/boss-raid'
         );
 
         process.env.VITE_SITE_URL = 'https://process.example.com';
@@ -373,7 +373,7 @@ export const architectureTests: ArchitectureTestCase[] = [
           VITE_SITE_NAME: 'Production Name',
           VITE_SITE_URL: 'https://process.example.com',
           VITE_GITHUB_BRANCH: 'local-branch',
-          VITE_GITHUB_URL: 'https://github.com/example/papers',
+          VITE_GITHUB_URL: 'https://github.com/example/boss-raid',
         });
       } finally {
         for (const [key, value] of Object.entries(previousValues)) {
@@ -496,7 +496,7 @@ export const architectureTests: ArchitectureTestCase[] = [
   {
     name: 'docs variant resolution falls back from overrides to base docs',
     run: async () => {
-      const tempDir = await mkdtemp(join(tmpdir(), 'papers-doc-variants-'));
+      const tempDir = await mkdtemp(join(tmpdir(), 'bossraid-docs-variants-'));
 
       try {
         await mkdir(join(tempDir, 'src', 'docs', 'content', 'guides'), { recursive: true });
@@ -673,8 +673,8 @@ export const architectureTests: ArchitectureTestCase[] = [
 
       const routes = createSeoRouteEntries(docsIndex, documents, {
         siteName: 'Boss Raid Docs',
-        siteSubtitle: 'Static documentation template',
-        siteDescription: 'Minimal docs starter.',
+        siteSubtitle: 'Raid-oriented multi-agent orchestration',
+        siteDescription: 'Boss Raid public docs.',
         versionConfig,
         i18nConfig,
       });

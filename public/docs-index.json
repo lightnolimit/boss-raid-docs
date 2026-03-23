@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-22T00:12:59.869Z",
+  "generated": "2026-03-23T01:28:25.058Z",
   "paths": [
     "getting-started/introduction",
     "getting-started/quick-start",
@@ -17,6 +17,7 @@
     "operations/runtime-and-environment",
     "operations/persistence-and-state",
     "operations/settlement-and-contracts",
+    "operations/pricing-and-payouts",
     "operations/troubleshooting",
     "reference/examples-and-payloads",
     "reference/current-limits",
@@ -25,7 +26,7 @@
     "reference/synthesis-registration",
     "llms"
   ],
-  "count": 23,
+  "count": 24,
   "titles": {
     "getting-started/introduction": "Introduction",
     "getting-started/quick-start": "Quick Start",
@@ -43,6 +44,7 @@
     "operations/runtime-and-environment": "Runtime And Environment",
     "operations/persistence-and-state": "Persistence And State",
     "operations/settlement-and-contracts": "Settlement And Contracts",
+    "operations/pricing-and-payouts": "Pricing And Payouts",
     "operations/troubleshooting": "Troubleshooting",
     "reference/examples-and-payloads": "Examples And Payloads",
     "reference/current-limits": "Current Limits",

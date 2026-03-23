@@ -111,7 +111,9 @@ export default function DocsPage() {
 
     applySeoMetadata({
       title: `${docTitle} | ${SITE_NAME}`,
-      description: docDescription || 'Documentation for the current Boss Raid platform section.',
+      description:
+        docDescription ||
+        'Boss Raid platform documentation for raids, providers, payments, proof, and operations.',
       path: canonicalPath,
       canonicalPath,
       type: noIndex ? 'website' : 'article',

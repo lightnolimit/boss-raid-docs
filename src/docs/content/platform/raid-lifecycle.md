@@ -1,82 +1,31 @@
+---
+description: A raid moves from request parsing and preflight through routing, provider runs, evaluation, synthesis, receipt generation, and settlement.
+---
+
 # Raid Lifecycle
 
-Mercenary runs one state machine from request intake to settlement.
+Every raid goes through the same high-level flow.
 
-## Flow
+## 1. Request And Preflight
 
-```mermaid
-flowchart TD
-  A["Accept request"] --> B["Sanitize task"]
-  B --> C["Discover fresh providers"]
-  C --> D["Probe /health"]
-  D --> E["Select providers"]
-  E --> F["Invite providers"]
-  F --> G["Track accept + heartbeat"]
-  G --> H["Collect submit / failure"]
-  H --> I["Evaluate submissions"]
-  I --> J["Approve valid outputs"]
-  J --> K["Split payout across successful providers"]
-  K --> L["Write settlement record"]
-```
+The API parses the request, validates the explicit payout budget, checks provider eligibility, and reserves capacity before any unpaid x402 challenge.
 
-## Raid Status Values
+## 2. Routing
 
-- `draft`
-- `sanitizing`
-- `queued`
-- `dispatching`
-- `running`
-- `first_valid`
-- `evaluating`
-- `settling`
-- `final`
-- `cancelled`
-- `expired`
+Mercenary selects providers from the live registry using capability, privacy, trust, budget, and concurrency constraints.
 
-## Assignment Status Values
+## 3. Provider Runs
 
-- `selected`
-- `invited`
-- `accepted`
-- `running`
-- `submitted`
-- `invalid`
-- `timed_out`
-- `failed`
-- `disqualified`
-- `paid`
+Providers receive scoped workstream instructions. Larger raids can recurse into internal child raids instead of remaining one flat fan-out.
 
-## Timeout Defaults
+## 4. Evaluation
 
-- invite accept: `3000` ms
-- first heartbeat: `5000` ms
-- heartbeat stale: `8000` ms
-- hard execution: `60000` ms
-- raid absolute: `90000` ms
-- provider freshness: `60000` ms
+Weak outputs are dropped. Mercenary can use reserve experts to repair or expand weak branches before finalization.
 
-These map to:
+## 5. Synthesis
 
-- `BOSSRAID_INVITE_ACCEPT_MS`
-- `BOSSRAID_FIRST_HEARTBEAT_MS`
-- `BOSSRAID_HEARTBEAT_STALE_MS`
-- `BOSSRAID_HARD_EXECUTION_MS`
-- `BOSSRAID_RAID_ABSOLUTE_MS`
-- `BOSSRAID_PROVIDER_FRESH_MS`
+Approved submissions are combined into one canonical multi-agent result with ranked contribution proof.
 
-## Failure And Cancellation Rules
+## 6. Receipt And Settlement
 
-- no eligible providers: `409 no_eligible_providers`
-- cancelled raids ignore later provider callbacks
-- unknown raid ids return `404`
-- callbacks without the active `providerRunId` are rejected
-
-## Evaluation Replay
-
-`POST /v1/evaluations/:raidId/replay` re-runs evaluation over stored submissions. It does not re-run provider jobs.
-
-## Next Steps
-
-- [Providers](/docs/platform/providers)
-- [Native Raid](/docs/api-reference/native-raid)
-- [Persistence And State](/docs/operations/persistence-and-state)
+Result and receipt surfaces expose routing proof, settlement proof, and attestation. Successful providers split payout equally.

@@ -1,72 +1,29 @@
+---
+description: Boss Raid persists raid state, tokens, proof artifacts, and settlement records with SQLite as the local default.
+---
+
 # Persistence And State
 
-Boss Raid persists provider state and raid state so the API, ops surface, and settlement tooling can work against the same data.
+Boss Raid persists raid state and proof surfaces instead of treating orchestration as a transient chat response.
 
-## Backends
+## Current Backend Posture
 
-### SQLite
+- SQLite-backed state is the local default
+- file-backed settlement artifacts remain supported
+- persistence is still file- or SQLite-oriented today
 
-`@bossraid/persistence-sqlite` is the current local default backend.
+## Persisted Objects
 
-Configured by:
+- raids and child raids
+- provider runs and ranked submissions
+- routing proof
+- settlement proof
+- access tokens for public reads
 
-- `BOSSRAID_STORAGE_BACKEND=sqlite`
-- `BOSSRAID_SQLITE_FILE=./temp/bossraid-state.sqlite`
+## Public Read Model
 
-### File-Backed Snapshots
+Spawn returns `raidAccessToken`. Public reads against raid status, result, attested result, and `agent_log.json` require that token unless the caller is admin-authenticated.
 
-`@bossraid/persistence` provides file-backed snapshots.
+## Operational Guidance
 
-Configured by:
-
-- `BOSSRAID_STORAGE_BACKEND=file`
-- `BOSSRAID_STATE_FILE=./temp/bossraid-state.json`
-
-### In-Memory
-
-The orchestrator can also run against in-memory persistence, but that is not the local default.
-
-## What Gets Persisted
-
-- provider profiles
-- provider status and freshness timestamps
-- raid records
-- assignments
-- ranked submissions
-- reputation events
-- settlement execution records
-
-## Restore Behavior
-
-On boot, the orchestrator restores:
-
-- persisted providers into runtime provider profiles
-- persisted raids into active raid records
-
-It then refreshes provider scores and continues serving status and result routes from the restored state.
-
-## Settlement Artifacts
-
-Settlement execution records include:
-
-- execution mode
-- artifact path
-- registry raid reference
-- task hash
-- evaluation hash
-- successful provider ids
-- allocations
-- optional transaction hashes
-- optional job ids
-
-## Current Operational Guidance
-
-- use SQLite for local development
-- keep file-backed mode as a compatibility path
-- do not assume D1 exists yet
-
-## Next Steps
-
-- [Raid Lifecycle](/docs/platform/raid-lifecycle)
-- [Settlement And Contracts](/docs/operations/settlement-and-contracts)
-- [Current Limits](/docs/reference/current-limits)
+Treat the persistence layer as part of the proof story. Receipts, logs, and settlement evidence all depend on the recorded raid state remaining available.

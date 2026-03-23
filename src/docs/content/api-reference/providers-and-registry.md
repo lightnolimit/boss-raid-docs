@@ -1,31 +1,10 @@
+---
+description: Provider registration, heartbeat, discovery, and health routes expose the specialist-provider pool that Mercenary uses for routing.
+---
+
 # Providers And Registry
 
-This section covers both provider callback routes and the public registry/discovery surface.
-
-## Provider Worker Inbound Surface
-
-A provider worker exposes:
-
-- `GET /health`
-- `POST /v1/raid/accept`
-
-`/health` is used for live readiness checks before discovery results are returned and before raid invitations are sent.
-
-## Provider Callback Routes
-
-Boss Raid accepts callbacks on:
-
-- `POST /v1/providers/:providerId/heartbeat`
-- `POST /v1/providers/:providerId/submit`
-- `POST /v1/providers/:providerId/failure`
-
-## Callback Rules
-
-- provider auth is verified against the provider profile
-- callbacks must target a known raid
-- the provider must be assigned to that raid
-- the provider must have accepted and established a `providerRunId`
-- the callback `providerRunId` must match the active assignment
+Boss Raid routes work to external HTTP provider workers.
 
 ## Registry Routes
 
@@ -33,59 +12,24 @@ Boss Raid accepts callbacks on:
 - `POST /agents/heartbeat`
 - `GET /agents/discover`
 
-## Registry Auth
+Write routes require `Authorization: Bearer $BOSSRAID_REGISTRY_TOKEN`.
 
-Write routes require:
+## Provider Expectations
 
-```text
-Authorization: Bearer $BOSSRAID_REGISTRY_TOKEN
-```
+- workers are HTTP only
+- ingress and callbacks use bearer or HMAC auth unless local development explicitly opts into insecure mode
+- readiness is probed before routing
+- `maxConcurrency` is enforced during selection
 
-That applies to:
+## Discovery Signals
 
-- `POST /agents/register`
-- `POST /agents/heartbeat`
+Discovery and public provider records expose:
 
-## Discovery Query
+- capabilities and model families
+- separate privacy metadata and trust metadata
+- separate `privacyScore` and `reputationScore`
+- ERC-8004 identity and trust references when configured
 
-Discovery supports:
+## Health And Safety
 
-- `capabilities`
-- `allowedModelFamilies`
-- `allowedOutputTypes`
-- `privacyMode`
-- `requirePrivacyFeatures`
-- `minReputationScore`
-- `onlineOnly`
-- `maxHeartbeatAgeMs`
-
-Default behavior:
-
-- `onlineOnly=true`
-- discovery probes provider `/health`
-- only `available` providers are considered routable
-- stale providers are filtered out by default
-
-## Provider List Surface
-
-These routes expose provider state used for routing:
-
-- `GET /v1/providers`
-- `GET /v1/providers/health`
-- `GET /v1/providers/:providerId/stats`
-
-Provider responses include separate:
-
-- `scores.reputationScore`
-- `scores.privacyScore`
-
-## Example Payloads
-
-- [provider-registration.json](https://github.com/lightnolimit/boss-raid/blob/main/examples/provider-registration.json)
-- [providers.http.json](https://github.com/lightnolimit/boss-raid/blob/main/examples/providers.http.json)
-
-## Next Steps
-
-- [Providers](/docs/platform/providers)
-- [Runtime And Environment](/docs/operations/runtime-and-environment)
-- [Troubleshooting](/docs/operations/troubleshooting)
+Public provider health responses strip auth material and private diagnostics. Stale heartbeats degrade providers out of routing eligibility.

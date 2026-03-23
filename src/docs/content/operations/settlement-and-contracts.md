@@ -1,88 +1,33 @@
+---
+description: Settlement can stay file-backed locally or move onchain, but the payout rule stays equal split across successful providers only.
+---
+
 # Settlement And Contracts
 
-Boss Raid supports both file-based settlement records and an on-chain bootstrap path.
+Boss Raid has two settlement modes.
 
-The payout policy is fixed:
+## File Mode
 
-- successful providers split payout equally
-- unsuccessful providers are not paid
+- default local path
+- writes settlement artifacts only
+- no onchain gas cost
 
-## File Settlement
+## Onchain Mode
 
-This is the live, practical local path today.
+- creates a parent raid record
+- creates one child job per selected provider
+- sets and optionally funds job budgets
+- links child jobs back to the raid
+- finalizes the raid in the registry
 
-Use:
+## Payout Rule
 
-```bash
-pnpm settle:raid -- --raid-id <id>
-pnpm settle:raid -- --latest-final
-pnpm settle:raid -- --latest-final --sqlite-file ./temp/bossraid-state.sqlite
-```
+Settlement is always:
 
-## On-Chain Tooling
+- equal split across successful providers only
+- no winner bonus
+- no runner-up payout
 
-Contracts live in `packages/contracts`.
+## Important Separation
 
-They include:
-
-- `BossJobEscrow.sol`
-- `RaidRegistry.sol`
-
-## Deploy Contracts
-
-Required env:
-
-- `BOSSRAID_RPC_URL`
-- `BOSSRAID_DEPLOYER_PRIVATE_KEY`
-- `BOSSRAID_TOKEN_ADDRESS`
-
-Run:
-
-```bash
-pnpm deploy:contracts
-```
-
-## Bootstrap Settlement Env
-
-```bash
-pnpm bootstrap:settlement-env
-```
-
-This writes settlement env output from a deployment manifest and provider address map.
-
-## Full On-Chain Bootstrap
-
-```bash
-pnpm bootstrap:onchain
-```
-
-This deploys the contracts, writes the deployment manifest, writes the settlement env file, and prints the next manual step.
-
-## Settlement Env Surface
-
-- `BOSSRAID_SETTLEMENT_MODE`
-- `BOSSRAID_SETTLEMENT_DIR`
-- `BOSSRAID_RPC_URL`
-- `BOSSRAID_REGISTRY_ADDRESS`
-- `BOSSRAID_ESCROW_ADDRESS`
-- `BOSSRAID_TOKEN_ADDRESS`
-- `BOSSRAID_CLIENT_PRIVATE_KEY`
-- `BOSSRAID_EVALUATOR_ADDRESS`
-- `BOSSRAID_CHAIN_ID`
-- `BOSSRAID_SETTLEMENT_JOB_EXPIRY_SEC`
-- `BOSSRAID_SETTLEMENT_ATOMIC_MULTIPLIER`
-- `BOSSRAID_SETTLEMENT_FUND_JOBS`
-- `BOSSRAID_PROVIDER_ADDRESS_MAP_JSON`
-
-## Still Missing
-
-- contract tests
-- token allowance/bootstrap flow for funded jobs
-- deployment verification
-- chain-specific config presets
-
-## Next Steps
-
-- [Persistence And State](/docs/operations/persistence-and-state)
-- [Examples And Payloads](/docs/reference/examples-and-payloads)
-- [Current Limits](/docs/reference/current-limits)
+x402 payment and onchain settlement are separate systems. x402 charges the buyer at request time. Onchain settlement handles registry and child-job proof after the raid.

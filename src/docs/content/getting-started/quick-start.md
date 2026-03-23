@@ -1,93 +1,61 @@
+---
+description: Start the local Boss Raid stack, choose your payment posture, and send the first native raid or compatibility chat request.
+---
+
 # Quick Start
 
-Use this path if you want Boss Raid running locally with the fewest steps.
+Use this path to boot the local stack and hit the API quickly.
 
-## Requirements
-
-- Node.js 22+
-- pnpm 10+
-- a model API key
-- a model name
-
-## 1. Clone And Install
+## 1. Install And Verify
 
 ```bash
-git clone git@github.com:lightnolimit/boss-raid.git
+git clone https://github.com/lightnolimit/boss-raid.git
 cd boss-raid
 pnpm install
-```
-
-## 2. Create Local Env
-
-```bash
 cp .env.example .env
+pnpm check
 ```
 
-Set at least:
+## 2. Choose Your Local Payment Posture
 
-```env
-BOSSRAID_MODEL_API_KEY=...
-BOSSRAID_MODEL=gpt-4.1-mini
-```
+Public write routes are paid by default.
 
-The local defaults already point the stack at:
-
-- `BOSSRAID_STORAGE_BACKEND=sqlite`
-- `BOSSRAID_PROVIDERS_FILE=./examples/providers.http.json`
-- `BOSSRAID_SQLITE_FILE=./temp/bossraid-state.sqlite`
-
-## 3. Validate The Workspace
+For unpaid local development:
 
 ```bash
-pnpm check
-pnpm build
+echo 'BOSSRAID_X402_ENABLED=false' >> .env
 ```
 
-## 4. Start The Full Stack
+For paid local rehearsal with HMAC:
+
+```bash
+echo 'BOSSRAID_X402_VERIFY_HMAC_SECRET=local-dev-only' >> .env
+echo 'BOSSRAID_X402_PAY_TO=0x0000000000000000000000000000000000000001' >> .env
+```
+
+## 3. Start The Stack
 
 ```bash
 pnpm dev
 ```
 
-This starts:
+Local entrypoints:
 
-- API on `http://127.0.0.1:8787`
-- web on `http://127.0.0.1:4173`
-- ops on `http://127.0.0.1:4174`
-- local providers on `http://127.0.0.1:9001`, `9002`, and `9003`
+- web: `http://127.0.0.1:4173`
+- ops: `http://127.0.0.1:4174`
+- API: `http://127.0.0.1:8787`
 
-## 5. Hit The Native Route
+## 4. Send A Request
 
-```bash
-curl -X POST http://127.0.0.1:8787/v1/raid \
-  -H "content-type: application/json" \
-  -d '{
-    "agent": "mercenary-v1",
-    "taskType": "document_analysis",
-    "task": {
-      "title": "Review the memo",
-      "description": "Summarize the main risks and open questions.",
-      "language": "text",
-      "files": [],
-      "failingSignals": { "errors": [] }
-    },
-    "output": { "primaryType": "text", "artifactTypes": ["text", "json"] },
-    "raidPolicy": { "maxAgents": 3, "privacyMode": "prefer" }
-  }'
-```
+Use the example payloads in:
 
-## If You Want Separate Processes
+- `examples/unity-bug/task.json`
+- `examples/chat-completion-request.json`
 
-```bash
-pnpm dev:providers
-pnpm dev:api
-pnpm dev:web
-pnpm dev:ops
-pnpm dev:mcp
-```
+Both public write routes require an explicit payout budget.
 
 ## Next Steps
 
 - [Local Development](/docs/getting-started/local-development)
 - [Native Raid](/docs/api-reference/native-raid)
-- [Runtime And Environment](/docs/operations/runtime-and-environment)
+- [Chat Completions](/docs/api-reference/chat-completions)

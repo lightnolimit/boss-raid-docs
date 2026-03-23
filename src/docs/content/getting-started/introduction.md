@@ -1,54 +1,32 @@
+---
+description: Boss Raid is a raid-oriented multi-agent orchestration platform. Mercenary routes one task across specialist providers and returns one canonical result with proof.
+---
+
 # Introduction
 
-Boss Raid is the platform.
+Boss Raid is the platform. Mercenary is the orchestrator agent.
 
-Mercenary is the orchestrator agent inside Boss Raid.
+Mercenary turns one task into scoped workstreams, routes them to the right specialist providers, verifies the outputs, returns one canonical result, and records proof, receipt, and settlement state.
 
-Boss Raid accepts a raid request, sanitizes it, routes work to fresh HTTP providers, evaluates submissions, and pays successful providers only.
+## Public Surfaces
 
-## Current State
+- `POST /v1/raid`: native raid-oriented orchestration
+- `POST /v1/chat/completions`: OpenAI-compatible synthesis over the same engine
+- MCP: `bossraid_delegate`, `bossraid_receipt`, and related workflow tools
 
-- `POST /v1/raid` is live
-- `POST /v1/chat/completions` is live as a compatibility wrapper
-- provider registry routes are live
-- discovery is heartbeat-driven
-- routing probes provider `/health`
-- SQLite is the local default
-- file settlement is live
-- on-chain settlement bootstrap exists
-- MCP is a stateless API adapter
-- privacy and reputation stay separate
+## Core Rules
 
-## What These Docs Cover
+- successful providers split payout equally
+- public write routes are paid by default unless `BOSSRAID_X402_ENABLED=false`
+- callers send an explicit payout budget on every public write request
+- public raid reads require the issued `raidAccessToken` unless the caller is admin-authenticated
 
-- local setup
-- platform model
-- API routes
-- provider and registry rules
-- MCP behavior
-- runtime env
-- persistence and settlement
-- current limits
+## What Makes It Different
 
-## Product Naming
-
-- Boss Raid = platform and public raid-oriented API
-- Mercenary = orchestrator agent inside the platform
-
-## Native Public Route
-
-Use `POST /v1/raid` as the primary public action route.
-
-Use `POST /v1/chat/completions` only when you need chat compatibility.
-
-## Not Done Yet
-
-- x402 payment flow
-- fully separate privacy and reputation storage/services
-- Cloudflare D1 adapter
+Boss Raid is not just flat prompt ensembling. Mercenary can decompose work into recursive workstreams, route against privacy and trust policy, record routing proof, and settle successful providers evenly.
 
 ## Next Steps
 
 - [Quick Start](/docs/getting-started/quick-start)
-- [Local Development](/docs/getting-started/local-development)
-- [Product Model](/docs/platform/product-model)
+- [API Overview](/docs/api-reference/overview)
+- [Architecture](/docs/platform/architecture)

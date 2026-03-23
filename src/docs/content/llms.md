@@ -1,38 +1,34 @@
+---
+description: Boss Raid publishes AI-facing llms.txt exports so external tools can consume the docs corpus without crawling the full UI.
+---
+
 # LLMs.txt
 
-This docs site generates AI-facing exports from the Boss Raid documentation corpus.
+Boss Raid publishes AI-facing text exports for agents, retrieval pipelines, and search tooling.
 
 ## Generated Files
 
 - `/llms.txt`
 - `/llms-full.txt`
 
-## Why They Matter
+## What They Cover
 
-These files give agents and internal tooling a single text-first entry point into the Boss Raid docs without requiring them to crawl the full UI.
+The exports summarize the public docs corpus for:
 
-That is useful for:
+- native raid and chat routes
+- MCP workflow integration
+- runtime and deployment posture
+- pricing, payouts, proof, and settlement
 
-- agent integration work
-- local coding assistants
-- MCP and automation consumers
-- retrieval and indexing systems
+## Refreshing Exports
 
-## How They Are Generated
-
-`npm run build` regenerates them automatically.
-
-If you only want to refresh AI exports while writing docs, run:
+From the docs app root:
 
 ```bash
 npm run generate:llms
 ```
 
-## Regenerate After
-
-- changing markdown content
-- changing docs structure
-- changing page descriptions or summaries that should appear in exports
+`npm run build` regenerates them automatically.
 
 ## Helpful Links
 

@@ -1,63 +1,32 @@
+---
+description: The most common Boss Raid failures are missing budgets, missing payment context, no eligible providers, or missing runtime proof configuration.
+---
+
 # Troubleshooting
 
-## `POST /v1/raid` Returns `409 no_eligible_providers`
+## `400 bad_request`
 
-Boss Raid now fails fast when no fresh provider satisfies the request.
+Most common cause: the caller omitted the explicit payout budget.
 
-Check:
+- native raid needs `raidPolicy.maxTotalCost`
+- chat needs `raid_policy.max_total_cost`
 
-- at least one provider is running
-- provider `/health` returns `ready: true`
-- the provider is still `available`
-- the provider is within the freshness window
-- your `raidPolicy` is not over-constrained on privacy, output type, model family, or reputation
+## `402 Payment Required`
 
-## Providers Show Up But Never Get Routed
+Public write routes are paid by default.
 
-Discovery and raid spawn both probe provider readiness before routing.
+- for unpaid local testing, set `BOSSRAID_X402_ENABLED=false`
+- for local paid rehearsal, set `BOSSRAID_X402_VERIFY_HMAC_SECRET`
+- the paid retry must carry the reservation context
 
-If the worker started without `BOSSRAID_MODEL_API_KEY` or `BOSSRAID_MODEL`, it can exist but stay not-ready.
+## `409` Before `402`
 
-## Registry Writes Return `401`
+Provider preflight failed. No payment should be attempted until provider eligibility or readiness is fixed.
 
-`POST /agents/register` and `POST /agents/heartbeat` require:
+## Attested Result Returns `503`
 
-```text
-Authorization: Bearer $BOSSRAID_REGISTRY_TOKEN
-```
+`MNEMONIC` is missing, so the TEE-backed signer is not available.
 
-## Provider Submission Fails With `provider_run_required` Or `provider_run_mismatch`
+## MCP Delegate Fails On Payment
 
-The provider must first accept the raid and receive a `providerRunId`.
-
-All later callbacks must carry that exact `providerRunId`.
-
-## A Provider Goes Stale Mid-Run
-
-After the first heartbeat, missing heartbeats for `BOSSRAID_HEARTBEAT_STALE_MS` times the assignment out.
-
-## Evaluation Does Not Run Caller Test Commands
-
-That is expected.
-
-Caller-supplied `failingSignals.tests` values are regression hints only. The evaluator uses deterministic proxies and runtime probes instead of executing arbitrary caller shell commands.
-
-## The MCP Adapter Looks Out Of Sync
-
-Check `BOSSRAID_API_BASE`.
-
-The MCP server is stateless. If it points at the wrong API base, it will read and mutate the wrong Boss Raid state.
-
-## SQLite State Looks Missing
-
-Confirm:
-
-- `BOSSRAID_STORAGE_BACKEND=sqlite`
-- `BOSSRAID_SQLITE_FILE` points at the file you expect
-- settlement commands use the same SQLite file when you run them manually
-
-## Next Steps
-
-- [Runtime And Environment](/docs/operations/runtime-and-environment)
-- [Providers And Registry](/docs/api-reference/providers-and-registry)
-- [Current Limits](/docs/reference/current-limits)
+Set `BOSSRAID_X402_VERIFY_HMAC_SECRET` for local HMAC retries or disable x402 explicitly for private local workflows.

@@ -1,39 +1,28 @@
+---
+description: The current demo path combines paid public writes, recursive orchestration, proof surfaces, and attested-result flows for the hackathon release.
+---
+
 # Hackathon
 
-## Project
+## Current Story
 
-Boss Raid.
+- Boss Raid is the platform and raid flow
+- Mercenary routes work to external providers and pays successful providers only
+- the primary route is `POST /v1/raid`
+- x402 gates public write routes by default unless `BOSSRAID_X402_ENABLED=false`
+- PayAI is the default facilitator path for the current release
 
-## Story
+## Demo Edge
 
-Boss Raid is the platform and raid flow.
+- recursive mixture-of-agents orchestration instead of one fixed fan-out
+- reserve experts for repair or expansion branches
+- MCP delegate and receipt tools for host-agent demos
+- public `/receipt` plus attested result proof for the live lane
 
-Mercenary is the orchestrator agent inside Boss Raid. It accepts a raid request, routes it to external providers, approves successful providers, and splits payout evenly across successful providers only.
+## Rehearsal Order
 
-## Protocol Fit
+- local HMAC smoke
+- Base Sepolia wallet payment
+- one small Base mainnet payment
 
-- ERC-8183: evaluator and settlement semantics
-- x402: target payment and discovery layer
-- privacy-aware routing: target submission angle
-
-## Current Demo Shape
-
-1. submit a task
-2. Mercenary selects providers
-3. one provider may fail or time out
-4. evaluator approves or rejects each provider
-5. approved providers are shown
-6. settlement shows equal split across approved providers
-
-## Current Gaps
-
-- x402 is not built yet
-- `POST /v1/chat/completions` exists, but it is still a compatibility wrapper over the raid flow
-- `POST /v1/raid` should remain the primary native route
-- privacy metadata, reputation metadata, and computed scores are separate fields, but not fully separate systems yet
-
-## Next Steps
-
-- [Product Model](/docs/platform/product-model)
-- [Settlement And Contracts](/docs/operations/settlement-and-contracts)
-- [Synthesis Registration](/docs/reference/synthesis-registration)
+If a paid route returns `409` before `402`, provider preflight failed and payment should not be attempted.

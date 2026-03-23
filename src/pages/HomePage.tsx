@@ -13,7 +13,7 @@ export default function HomePage() {
     const subtitle = homepageConfig.hero.subtitle || 'Documentation';
     const description =
       homepageConfig.hero.description ||
-      'A minimal docs starter with install-ready defaults, generated content, and static-host deployment support.';
+      'Native raid APIs, OpenAI-compatible chat synthesis, MCP delegation, proof surfaces, and x402 payment flows for Boss Raid and Mercenary.';
 
     applySeoMetadata({
       title: `${SITE_NAME} | ${subtitle}`,

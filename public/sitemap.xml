@@ -2,98 +2,102 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://boss-raid-docs.pages.dev/</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/getting-started/introduction</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/getting-started/quick-start</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/getting-started/local-development</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/platform/product-model</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/platform/architecture</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/platform/raid-lifecycle</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/platform/providers</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/platform/apps-and-packages</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/api-reference/overview</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/api-reference/native-raid</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/api-reference/chat-completions</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/api-reference/providers-and-registry</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/api-reference/mcp-server</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/operations/runtime-and-environment</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/operations/persistence-and-state</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/operations/settlement-and-contracts</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
+  </url>
+  <url>
+    <loc>https://boss-raid-docs.pages.dev/docs/operations/pricing-and-payouts</loc>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/operations/troubleshooting</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/reference/examples-and-payloads</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/reference/current-limits</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/reference/ui-direction</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/reference/hackathon</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/docs/reference/synthesis-registration</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
   <url>
     <loc>https://boss-raid-docs.pages.dev/llms</loc>
-    <lastmod>2026-03-22T00:27:47.659Z</lastmod>
+    <lastmod>2026-03-23T01:28:50.415Z</lastmod>
   </url>
 </urlset>

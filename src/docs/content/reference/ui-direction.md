@@ -1,72 +1,22 @@
+---
+description: The public web should stay API-first and proof-aware, while ops remains internal and focused on receipt review and control surfaces.
+---
+
 # UI Direction
-
-Boss Raid has two different UI surfaces and they should stay different.
-
-## Split
-
-- `apps/web` is public
-- `apps/ops` is internal
-
-Do not put operator controls on the public page.
 
 ## Public Web
 
-Purpose:
-
-- explain the product fast
-- show the two API entrypoints
-- provide copyable examples
-- link to the docs
-
-Use:
-
-- sparse copy
-- segmented hero imagery
-- compact raid spec framing
-- layered code panels
-- small mono labels
-- restrained motion tied to real state
-
-Do not use:
-
-- payload editors
-- abort or replay controls
-- provider internals
-- live operator timelines
+- `apps/web` is public
+- `/` frames Boss Raid as a private tool surface
+- `/raiders` exposes the public provider directory
+- `/receipt` exposes one public proof page at a time via `raidId` plus `raidAccessToken`
 
 ## Ops
 
-Purpose:
+- `apps/ops` is internal
+- it includes receipt and proof views for ranked submissions and settlement review
+- do not place operator controls on the public page
 
-- launch raids
-- inspect providers
-- inspect raid state
-- replay evaluation
-- inspect approved output
-- inspect settlement
+## Design Rule
 
-Use:
-
-- dense control layout
-- state-driven warnings
-- readiness and activity tied to real provider state
-- restrained animation only when state needs it
-
-## Shared Visual Direction
-
-- dark surfaces
-- orange accent
-- minimal shadows
-- public and ops should feel related, not identical
-
-## Current Product Truth
-
-The public web app is landing-only.
-
-The operator surface is a separate app in `apps/ops`.
-
-## Next Steps
-
-- [Apps And Packages](/docs/platform/apps-and-packages)
-- [Current Limits](/docs/reference/current-limits)
-- [Hackathon](/docs/reference/hackathon)
+Public and ops should feel related, but not identical. The public surface should stay focused on task ingress, proof, and discoverability rather than internal control flows.

@@ -1,0 +1,10 @@
+{
+  "path": "operations/pricing-and-payouts",
+  "title": "Pricing And Payouts",
+  "description": "Buyers pay request budget plus route surcharge, and successful providers split the payout budget equally after approval.",
+  "frontmatter": {
+    "description": "Buyers pay request budget plus route surcharge, and successful providers split the payout budget equally after approval."
+  },
+  "content": "# Pricing And Payouts\n\nBoss Raid does not use one global flat price.\n\n## Three Separate Numbers\n\n- request payout budget: chosen by the caller\n- route surcharge: small fixed platform charge per public route\n- provider list price: routing metadata, not direct settlement payout\n\n## Public Request Price\n\nBuyer charge is:\n\n```text\nrequest payout budget + route surcharge\n```\n\nDefault surcharges:\n\n- raid: `$0.01`\n- chat: `$0.002`\n\n## Budget Rules\n\n- native raid requires `raidPolicy.maxTotalCost`\n- chat requires `raid_policy.max_total_cost`\n- omitted budget returns `400 bad_request`\n\n## Provider Payout Rule\n\nThe payout pool is the raid budget. Successful providers split it equally.\n\nExamples:\n\n- budget `$12`, 3 successful providers -> `$4` each\n- budget `$12`, 2 successful providers -> `$6` each\n- budget `$12`, 1 successful provider -> `$12`\n\nProvider `pricePerTaskUsd` affects routing, not settlement shares.\n",
+  "sourcePath": "src/docs/content/operations/pricing-and-payouts.md"
+}

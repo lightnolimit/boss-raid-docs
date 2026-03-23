@@ -12,8 +12,6 @@ interface FooterProps {
 }
 
 export function Footer({ footer }: FooterProps) {
-  const siteName = import.meta.env.VITE_SITE_NAME || 'Boss Raid Docs';
-
   return (
     <footer className="py-8 border-t" style={{ borderColor: 'var(--border-unified)' }}>
       <div className="container mx-auto px-6">
@@ -23,10 +21,11 @@ export function Footer({ footer }: FooterProps) {
               className="font-bold text-lg"
               style={{ fontFamily: 'var(--mono-font)', color: 'var(--primary-color)' }}
             >
-              {siteName}
+              Boss Raid Docs
             </span>
             <span style={{ color: 'var(--muted-color)' }}>
-              Documentation for the Boss Raid platform
+              {' '}
+              / Mercenary runtime, API, and proof docs
             </span>
           </div>
 

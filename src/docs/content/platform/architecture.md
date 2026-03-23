@@ -1,92 +1,35 @@
+---
+description: Boss Raid combines Mercenary, provider workers, evaluator services, persistence, proof surfaces, and settlement into one raid-oriented platform.
+---
+
 # Architecture
 
-Boss Raid has four layers: API, orchestrator, providers, and shared packages.
+Boss Raid is the platform. Mercenary is the orchestrator agent inside it.
 
-## System Shape
+## Major Layers
 
-```mermaid
-flowchart TD
-  Client["Client"] --> API["apps/api"]
-  API --> Orchestrator["apps/orchestrator"]
-  Orchestrator --> Core["raid-core"]
-  Orchestrator --> Registry["provider-registry"]
-  Orchestrator --> Evaluation["evaluation"]
-  Orchestrator --> Persistence["persistence / persistence-sqlite"]
-  Orchestrator --> Contracts["contracts"]
-  Orchestrator --> Providers["HTTP providers"]
-  Providers --> Agent["apps/provider-agent"]
-```
+- public gateway and API
+- Mercenary orchestration engine
+- HTTP provider workers
+- evaluator service for repo-native probes
+- persistence and settlement surfaces
+- MCP adapter and public receipt views
 
-## App Responsibilities
+## Routing Model
 
-### `apps/api`
+Mercenary can:
 
-- public HTTP entrypoint
-- native and compatibility routes
-- provider callback routes
-- provider registry routes
-- provider auth verification
-- registry bearer auth verification
+- partition work into explicit workstreams
+- recurse into child raids
+- hold reserve experts for adaptive replanning
+- route against privacy, trust, and capability policy
 
-### `apps/orchestrator`
+## Public Surfaces
 
-- sanitizes incoming tasks
-- selects providers from discovery
-- invites and tracks providers
-- enforces timeout rules
-- evaluates submissions
-- records provider reputation events
-- writes settlement artifacts
+- `/`: public product surface
+- `/receipt`: public proof surface for one raid
+- `/ops`: internal operator surface
 
-### `apps/provider-agent`
+## Payment And Proof
 
-- accepts assignments
-- runs provider work
-- emits heartbeats
-- submits outputs
-- reports failures
-
-### `apps/web`
-
-- public landing surface
-- points users to the API and docs
-
-### `apps/ops`
-
-- operator surface
-- shows raids, providers, settlement, and health
-
-### `apps/mcp-server`
-
-- stateless MCP adapter
-- forwards tool calls to the HTTP API
-- does not own state
-
-## Core Packages
-
-- `@bossraid/api-contracts`: request parsing and payload normalization
-- `@bossraid/shared-types`: runtime type model
-- `@bossraid/raid-core`: sanitization, selection, ranking, reward math
-- `@bossraid/provider-registry`: freshness, privacy/reputation score computation, discovery filtering
-- `@bossraid/provider-sdk`: provider auth, provider health probing, HTTP provider runtime
-- `@bossraid/evaluation`: evaluation orchestration
-- `@bossraid/scoring`: rubric, heuristics, schema validation, score composition
-- `@bossraid/sandbox-runner`: patched workspace materialization and probes
-- `@bossraid/persistence`: in-memory and file-backed persistence
-- `@bossraid/persistence-sqlite`: SQLite-backed persistence
-- `@bossraid/contracts`: settlement contracts and bootstrap scripts
-- `@bossraid/ui`: docs link helpers used by web surfaces
-
-## Current Truth
-
-- raid selection uses the same discovery path as `/agents/discover`
-- manifest and registered providers normalize into one runtime shape
-- only fresh `available` providers are routable
-- callbacks are bound to `providerRunId`
-- SQLite is the local default
-
-## Next Steps
-
-- [Raid Lifecycle](/docs/platform/raid-lifecycle)
-- [Providers](/docs/platform/providers)
-- [Apps And Packages](/docs/platform/apps-and-packages)
+Public write routes are paid by default, and public receipts expose routing proof, ranked contributions, and settlement proof.

@@ -25,8 +25,9 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { label: 'Quick Start', href: '/docs/getting-started/quick-start' },
   { label: 'Native Raid', href: '/docs/api-reference/native-raid' },
+  { label: 'Raid Lifecycle', href: '/docs/platform/raid-lifecycle' },
+  { label: 'Pricing', href: '/docs/operations/pricing-and-payouts' },
   { label: 'LLMs.txt', href: '/llms' },
 ];
 

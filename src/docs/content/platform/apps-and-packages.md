@@ -1,110 +1,31 @@
+---
+description: The Boss Raid monorepo separates public apps, orchestration services, provider workers, evaluator services, and shared packages.
+---
+
 # Apps And Packages
 
-Boss Raid is organized as apps for execution surfaces and packages for shared platform logic.
+The monorepo is split into public apps, service apps, and shared packages.
 
 ## Apps
 
-### `@bossraid/api`
-
-- Fastify server
-- public route surface
-- provider callback validation
-- registry write auth enforcement
-
-### `@bossraid/orchestrator`
-
-- Mercenary runtime
-- raid state machine
-- persistence restore and save
-- settlement execution
-
-### `@bossraid/provider-agent`
-
-- reference external HTTP provider worker
-- model-backed submission generation
-
-### `@bossraid/web`
-
-- landing-only public product surface
-- shows API entrypoints and live status
-
-### `@bossraid/ops`
-
-- operator console
-- raid, provider, health, and settlement views
-
-### `@bossraid/mcp-server`
-
-- MCP adapter over the HTTP API
+- `apps/api`: public and internal HTTP routes
+- `apps/orchestrator`: Mercenary orchestration and settlement flow
+- `apps/provider-agent`: HTTP provider worker
+- `apps/evaluator`: isolated runtime probe service
+- `apps/mcp-server`: MCP adapter
+- `apps/web`: public web surface
+- `apps/ops`: internal operations UI
+- `apps/video`: promo and proof-lane video assets
 
 ## Packages
 
-### `@bossraid/shared-types`
+- `packages/api-contracts`: request parsing and shared contract logic
+- `packages/raid-core`: routing and raid selection primitives
+- `packages/provider-sdk`: provider interfaces
+- `packages/provider-registry`: provider discovery state
+- `packages/persistence` and `packages/persistence-sqlite`: storage backends
+- `packages/shared-types`: shared wire and runtime types
 
-The shared runtime contract. All higher-level packages depend on these types.
+## Design Goal
 
-### `@bossraid/api-contracts`
-
-Parses and normalizes request payloads for native raid, chat compatibility, registry writes, discovery queries, and provider callbacks.
-
-### `@bossraid/raid-core`
-
-Owns:
-
-- default limits and timeout defaults
-- task sanitization
-- selection scoring
-- ranking helpers
-- reward math
-
-### `@bossraid/provider-registry`
-
-Owns:
-
-- provider freshness logic
-- privacy score computation
-- reputation score computation
-- discovery query filtering
-- task-to-discovery-query translation
-
-### `@bossraid/provider-sdk`
-
-Owns:
-
-- provider auth header building and verification
-- provider `/health` probing
-- HTTP provider accept flow
-
-### `@bossraid/evaluation`
-
-Runs the evaluation pipeline over a provider submission.
-
-### `@bossraid/scoring`
-
-Runs schema checks, heuristics, duplicate detection, proxy tests, static build checks, and optional rubric scoring.
-
-### `@bossraid/sandbox-runner`
-
-Materializes patched workspaces and runs deterministic probes.
-
-### `@bossraid/persistence`
-
-In-memory and file-backed state snapshots.
-
-### `@bossraid/persistence-sqlite`
-
-SQLite-backed snapshots and local default persistence.
-
-### `@bossraid/contracts`
-
-Settlement contracts, deployment, and bootstrap scripts.
-
-### `@bossraid/ui`
-
-Small shared UI helpers, including the docs-link button used by the public web app.
-
-## Next Steps
-
-- [Architecture](/docs/platform/architecture)
-- [API Overview](/docs/api-reference/overview)
-- [Settlement And Contracts](/docs/operations/settlement-and-contracts)
+The repo keeps the native raid behavior in shared packages so HTTP, MCP, and UI surfaces all talk to the same core model.

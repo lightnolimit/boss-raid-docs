@@ -1,84 +1,36 @@
+---
+description: Boss Raid exposes a native raid route, an OpenAI-compatible chat route, provider registry routes, and an MCP adapter over the same Mercenary engine.
+---
+
 # API Reference Overview
 
-The public HTTP API is implemented in the app repo under `apps/api/src/index.ts`.
+Boss Raid has one orchestration engine with multiple ingress surfaces.
 
-Boss Raid is raid-oriented by design, so `POST /v1/raid` is the native public action route.
+## Public Write Routes
 
-## Route Groups
+- `POST /v1/raid`: native raid-oriented request shape
+- `POST /v1/chat/completions`: compatibility chat shape over the same engine
 
-### Health
+Both routes:
 
-- `GET /health`
-- `GET /v1/providers/health`
+- require an explicit payout budget
+- use x402 by default unless `BOSSRAID_X402_ENABLED=false`
+- can return `402` with `PAYMENT-REQUIRED`
+- reserve provider capacity before the unpaid challenge
 
-### Native Raid And Compatibility
+## Public Read Surfaces
 
-- `POST /v1/raid`
 - `GET /v1/raid/:raidId`
 - `GET /v1/raid/:raidId/result`
-- `POST /v1/raid/:raidId/abort`
-- `POST /v1/chat/completions`
+- `GET /v1/raid/:raidId/attested-result`
+- `GET /v1/raid/:raidId/agent_log.json`
 
-### Compatibility Aliases
+These reads require the issued `raidAccessToken` unless the caller is admin-authenticated.
 
-- `GET /v1/raids`
-- `POST /v1/raids`
-- `GET /v1/raids/:raidId`
-- `GET /v1/raids/:raidId/result`
-- `POST /v1/raids/:raidId/abort`
+## Adjacent Routes
 
-### Evaluation
-
-- `POST /v1/evaluations/:raidId/replay`
-
-### Provider Callback Routes
-
-- `POST /v1/providers/:providerId/heartbeat`
-- `POST /v1/providers/:providerId/submit`
-- `POST /v1/providers/:providerId/failure`
-- `GET /v1/providers`
-- `GET /v1/providers/:providerId/stats`
-
-### Registry Routes
-
-- `POST /agents/register`
-- `POST /agents/heartbeat`
-- `GET /agents/discover`
-
-## Response Patterns
-
-Spawn routes return:
-
-- `raidId`
-- `status`
-- `selectedExperts`
-- `reserveExperts`
-- `estimatedFirstResultSec`
-- `sanitization`
-
-Status routes return:
-
-- `raidId`
-- `status`
-- `experts`
-- `firstValidAvailable`
-- `bestCurrentScore`
-- `sanitization`
-
-Result routes return:
-
-- `primarySubmission`
-- `approvedSubmissions`
-- `settlement`
-- `settlementExecution`
-- `reputationEvents`
-
-## Important Runtime Rules
-
-- `POST /v1/raid` fails fast with `409 no_eligible_providers` when no fresh provider satisfies the request
-- provider callbacks must be authorized and must match the active `providerRunId`
-- cancelled raids ignore later provider callbacks
-- unknown raid ids return `404`
+- `/agents/*`: provider registration, heartbeat, and discovery
+- MCP: workflow-native delegation over the same API
 
 ## Next Steps
 

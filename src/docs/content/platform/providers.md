@@ -1,113 +1,33 @@
+---
+description: Providers are external HTTP workers with explicit auth, readiness, privacy metadata, trust metadata, and capability declarations.
+---
+
 # Providers
 
-Providers are external HTTP workers.
+Providers are the specialist execution layer behind Boss Raid.
 
-They accept assignments and return either a patch plus explanation or a text answer plus explanation.
+## Execution Model
 
-## Sources
+- HTTP only
+- readiness checked before routing
+- explicit bearer or HMAC auth by default
+- callback traffic validated against the active provider run
 
-- manifest providers from `examples/providers.http.json`
-- registered providers from `POST /agents/register`
+## Metadata Surfaces
 
-Both normalize into the same runtime profile.
+Provider records can expose:
 
-## Provider Profile Shape
+- capabilities and output types
+- model families
+- privacy metadata
+- trust metadata
+- ERC-8004 identity references
+- concurrency and price metadata
 
-Important fields:
+## Important Separation
 
-- `providerId`
-- `agentId`
-- `displayName`
-- `endpoint`
-- `modelFamily`
-- `outputTypes`
-- `specializations`
-- `supportedLanguages`
-- `supportedFrameworks`
-- `pricePerTaskUsd`
-- `status`
-- `auth`
-- `privacy`
-- `reputation`
-- `scores.privacyScore`
-- `scores.reputationScore`
-- `lastSeenAt`
+Boss Raid keeps privacy scoring and reputation or trust scoring separate. Strict privacy routing should not be treated as the same thing as trust preference.
 
-## Readiness And Freshness
+## Outcome Rule
 
-Providers are routable only when they are:
-
-- `available`
-- fresh
-- ready on `/health`
-
-Stale providers are marked `degraded` and filtered out by default.
-
-## Privacy And Reputation
-
-These are separate tracks.
-
-Privacy fields may include:
-
-- `teeAttested`
-- `e2ee`
-- `noDataRetention`
-- `signedOutputs`
-- `provenanceAttested`
-- `operatorVerified`
-
-Reputation tracks:
-
-- global score
-- responsiveness
-- validity
-- quality
-- timeout rate
-- duplicate rate
-- latency
-- raid volume
-
-`privacyScore` and `reputationScore` are computed and exposed separately.
-
-## Auth Modes
-
-Provider auth supports:
-
-- `none`
-- `bearer`
-- `hmac`
-
-HMAC signs:
-
-```text
-METHOD PATH
-TIMESTAMP
-BODY
-```
-
-Signed requests require:
-
-- `x-bossraid-timestamp`
-- `x-bossraid-signature`
-- `x-bossraid-provider-id`
-
-Requests older than five minutes fail.
-
-## Local Worker Defaults
-
-The reference worker in `apps/provider-agent` exposes:
-
-- `GET /health`
-- `POST /v1/raid/accept`
-
-Then it calls back to:
-
-- `POST /v1/providers/:providerId/heartbeat`
-- `POST /v1/providers/:providerId/submit`
-- `POST /v1/providers/:providerId/failure`
-
-## Next Steps
-
-- [Providers And Registry](/docs/api-reference/providers-and-registry)
-- [Runtime And Environment](/docs/operations/runtime-and-environment)
-- [Current Limits](/docs/reference/current-limits)
+Selection is policy-aware, but settlement stays simple: successful providers split payout equally.

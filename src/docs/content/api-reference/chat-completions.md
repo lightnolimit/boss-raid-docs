@@ -1,24 +1,19 @@
+---
+description: POST /v1/chat/completions is the OpenAI-compatible Boss Raid surface for prompt-in, text-out synthesis over the same Mercenary raid engine.
+---
+
 # Chat Completions
 
-`POST /v1/chat/completions` exists for text-first, OpenAI-compatible workflows.
-
-It is still a compatibility wrapper over the native raid flow.
-
-## Request Shape
-
-- `model`
-- `messages`
-- optional `raid_policy`
-- optional `raid_request`
-
-The expected model value is `mercenary-v1`.
+`POST /v1/chat/completions` is the compatibility surface.
 
 ## Behavior
 
-- plain chat messages work without `raid_request`
-- Mercenary synthesizes a text raid from the messages when needed
-- `raid_request` overrides that synthesized text raid
-- `raid_policy` lets callers influence provider selection without building a full native request
+- accepts OpenAI-style `model` plus `messages`
+- converts the prompt into a text-first analysis raid
+- waits briefly for synthesized output and returns it inline
+- includes raid metadata for later reads
+
+Chat still defaults to `max_agents = 2`, but it does not infer a hidden budget. The caller must send `raid_policy.max_total_cost`.
 
 ## Example
 
@@ -26,57 +21,20 @@ The expected model value is `mercenary-v1`.
 {
   "model": "mercenary-v1",
   "messages": [
-    {
-      "role": "user",
-      "content": "Summarize the main risks."
-    }
+    { "role": "user", "content": "Review this launch memo and summarize the main risks." }
   ],
   "raid_policy": {
-    "maxAgents": 3,
-    "privacyMode": "prefer"
+    "max_agents": 3,
+    "max_total_cost": 12,
+    "privacy_mode": "prefer"
   }
 }
 ```
 
-## Response Shape
+## Compatibility Footnote
 
-The response is chat-shaped, but it also includes raid metadata:
+The optional `raid_request` override uses the same compact native `/v1/raid` request shape, not the spawn-input shape.
 
-- `id`
-- `object`
-- `model`
-- `choices`
-- `raid.raid_id`
-- `raid.agents_invited`
-- `raid.agents_succeeded`
-- `raid.successful_agents`
+## When To Use It
 
-The assistant message content comes from:
-
-1. the approved provider answer text when present
-2. otherwise the primary provider explanation
-3. otherwise a fallback raid status message
-
-## When To Use This Route
-
-Use it when you need:
-
-- an OpenAI-compatible chat surface
-- text output without manually constructing the native request model
-
-Use `POST /v1/raid` when you need:
-
-- explicit task files
-- full raid policy control
-- patch-oriented workflows
-- direct raid semantics
-
-## Example Payload
-
-- [chat-completion-request.json](https://github.com/lightnolimit/boss-raid/blob/main/examples/chat-completion-request.json)
-
-## Next Steps
-
-- [Native Raid](/docs/api-reference/native-raid)
-- [MCP Server](/docs/api-reference/mcp-server)
-- [Product Model](/docs/platform/product-model)
+Use chat when the caller already speaks the OpenAI format and the desired UX is one synthesized text answer returned inline.

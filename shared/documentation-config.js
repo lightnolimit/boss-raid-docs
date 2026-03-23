@@ -47,7 +47,7 @@ export const homepageConfig = {
   enabled: true,
   hero: {
     title: 'Boss Raid Docs',
-    subtitle: 'Mercenary orchestration, provider routing, and settlement',
+    subtitle: 'Raid-oriented multi-agent orchestration',
     description:
       'Boss Raid is a raid-oriented execution platform. Mercenary sanitizes tasks, routes work to fresh HTTP providers, evaluates submissions, and splits payout equally across successful providers only.',
     artwork: {
@@ -247,6 +247,12 @@ export const documentationTree = [
         name: 'Settlement And Contracts.md',
         path: 'operations/settlement-and-contracts',
         tags: ['settlement', 'contracts', 'onchain'],
+      },
+      {
+        type: 'file',
+        name: 'Pricing And Payouts.md',
+        path: 'operations/pricing-and-payouts',
+        tags: ['pricing', 'payouts', 'x402'],
       },
       {
         type: 'file',

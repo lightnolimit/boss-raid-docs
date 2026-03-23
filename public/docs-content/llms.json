@@ -1,8 +1,10 @@
 {
   "path": "llms",
   "title": "LLMs.txt",
-  "description": "This docs site generates AI-facing exports from the Boss Raid documentation corpus.",
-  "frontmatter": {},
-  "content": "# LLMs.txt\n\nThis docs site generates AI-facing exports from the Boss Raid documentation corpus.\n\n## Generated Files\n\n- `/llms.txt`\n- `/llms-full.txt`\n\n## Why They Matter\n\nThese files give agents and internal tooling a single text-first entry point into the Boss Raid docs without requiring them to crawl the full UI.\n\nThat is useful for:\n\n- agent integration work\n- local coding assistants\n- MCP and automation consumers\n- retrieval and indexing systems\n\n## How They Are Generated\n\n`npm run build` regenerates them automatically.\n\nIf you only want to refresh AI exports while writing docs, run:\n\n```bash\nnpm run generate:llms\n```\n\n## Regenerate After\n\n- changing markdown content\n- changing docs structure\n- changing page descriptions or summaries that should appear in exports\n\n## Helpful Links\n\n<a href=\"/llms.txt\" class=\"download-link\" data-file=\"llms.txt\">Download llms.txt</a>\n\n<a href=\"/llms-full.txt\" class=\"download-link\" data-file=\"llms-full.txt\">Download llms-full.txt</a>\n\n<a href=\"#\" class=\"copy-link\" data-url=\"/llms.txt\">Copy llms.txt URL</a>\n\n## Preview\n\n{llms-preview}\n",
+  "description": "Boss Raid publishes AI-facing llms.txt exports so external tools can consume the docs corpus without crawling the full UI.",
+  "frontmatter": {
+    "description": "Boss Raid publishes AI-facing llms.txt exports so external tools can consume the docs corpus without crawling the full UI."
+  },
+  "content": "# LLMs.txt\n\nBoss Raid publishes AI-facing text exports for agents, retrieval pipelines, and search tooling.\n\n## Generated Files\n\n- `/llms.txt`\n- `/llms-full.txt`\n\n## What They Cover\n\nThe exports summarize the public docs corpus for:\n\n- native raid and chat routes\n- MCP workflow integration\n- runtime and deployment posture\n- pricing, payouts, proof, and settlement\n\n## Refreshing Exports\n\nFrom the docs app root:\n\n```bash\nnpm run generate:llms\n```\n\n`npm run build` regenerates them automatically.\n\n## Helpful Links\n\n<a href=\"/llms.txt\" class=\"download-link\" data-file=\"llms.txt\">Download llms.txt</a>\n\n<a href=\"/llms-full.txt\" class=\"download-link\" data-file=\"llms-full.txt\">Download llms-full.txt</a>\n\n<a href=\"#\" class=\"copy-link\" data-url=\"/llms.txt\">Copy llms.txt URL</a>\n\n## Preview\n\n{llms-preview}\n",
   "sourcePath": "src/docs/content/llms.md"
 }

@@ -1101,10 +1101,6 @@ header a:hover,
   line-height: var(--leading-loose);
 }
 
-.doc-content table {
-  font-size: var(--doc-body-text);
-}
-
 .dark .doc-content blockquote {
   background-color: rgba(255, 255, 255, 0.03);
   color: var(--text-secondary);
@@ -1808,6 +1804,7 @@ code.wallet-address {
 
 .doc-content p {
   margin-bottom: var(--space-4);
+  font-size: var(--doc-body-text);
 }
 
 .doc-content ul,
@@ -1819,6 +1816,7 @@ code.wallet-address {
 .doc-content li {
   margin-bottom: var(--space-2);
   line-height: var(--leading-relaxed);
+  font-size: var(--doc-body-text);
 }
 
 .mermaid-block {
